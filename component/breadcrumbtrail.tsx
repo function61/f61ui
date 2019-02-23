@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export interface Breadcrumb {
-	url: string;
+	url?: string;
 	title: string;
 }
 
@@ -12,7 +12,7 @@ interface BreadcrumbTrailProps {
 export class BreadcrumbTrail extends React.Component<BreadcrumbTrailProps, {}> {
 	render() {
 		const items = this.props.items.map((item, index) => {
-			if (item.url === '') {
+			if (!item.url) {
 				return (
 					<li key={index} className="active">
 						{item.title}
