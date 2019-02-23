@@ -125,7 +125,7 @@ export function makeRoute<S extends RouteParamsSpec>(routeName: string, routePar
           return acc;
         } else {
           return acc
-            + "/" +  (key as string).toLowerCase()
+            + "/" +  (key as string)
             // Encoding so we don't break on strings with '/', ...
             + "/" + encodeURIComponent(
               serializeRouteParam(routeParams[key], val));
@@ -180,8 +180,8 @@ function mkNextRouter<T, S extends RouteParamsSpec>(prevRouter: Router<T>, match
 /* Helper function for parsing URL's */
 /* TODO make more robust. Breaks eg when parameter name is substring of route name */
 function findInHash(_hash: string, _key: string): string | null {
-  const hash = _hash.toLowerCase();
-  const key = _key.toLowerCase();
+  const hash = _hash;
+  const key = _key;
 
   const startIndexOfString = hash.indexOf(key);
   if (startIndexOfString === -1) { return null; }
