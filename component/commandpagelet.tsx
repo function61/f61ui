@@ -1,6 +1,7 @@
 import { reloadCurrentPage } from 'f61ui/browserutils';
 import { CommandDefinition, CommandField, CommandFieldKind } from 'f61ui/commandtypes';
 import { DangerAlert } from 'f61ui/component/alerts';
+import { Info } from 'f61ui/component/info';
 import { coerceToStructuredErrorResponse, handleKnownGlobalErrors } from 'f61ui/errors';
 import { postJson } from 'f61ui/httputil';
 import { StructuredErrorResponse } from 'f61ui/types';
@@ -100,24 +101,14 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 			const validationFailedClass = valid ? '' : 'has-error';
 
-			const possiblyHelp = field.Help ? (
-				<span
-					title={field.Help}
-					className="glyphicon glyphicon-question-sign"
-					style={{ marginLeft: '8px' }}
-				/>
-			) : (
-				''
-			);
-
 			// TODO: label[for]
 			return (
 				<div className={`form-group ${validationFailedClass}`} key={field.Key}>
 					<div>
-						<label>
+						<label style={{ marginRight: '8px' }}>
 							{field.Key} {field.Required ? '*' : ''}
 						</label>
-						{possiblyHelp}
+						{field.Help ? <Info text={field.Help} /> : ''}
 					</div>
 
 					{input}
