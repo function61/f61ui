@@ -56,13 +56,17 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 			switch (field.Kind) {
 				case CommandFieldKind.Integer:
 					state.values[field.Key] = null;
+					if (field.DefaultValueNumber !== undefined) {
+						state.values[field.Key] = field.DefaultValueNumber;
+						state.fieldsThatWerePrefilled[field.Key] = true;
+					}
 					break;
 				case CommandFieldKind.Password:
 				case CommandFieldKind.Text:
 				case CommandFieldKind.Date:
 				case CommandFieldKind.Multiline:
 					state.values[field.Key] = field.DefaultValueString;
-					if (field.DefaultValueString) {
+					if (field.DefaultValueString !== undefined) {
 						state.fieldsThatWerePrefilled[field.Key] = true;
 					}
 					break;

@@ -28,6 +28,7 @@ export interface CommandField {
 	Kind: CommandFieldKind;
 	DefaultValueString?: string;
 	DefaultValueBoolean?: boolean;
+	DefaultValueNumber?: number;
 	Help?: string;
 	ValidationRegex: string;
 }
