@@ -68,7 +68,7 @@ export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {
 			'Tuesday',
 			'Wednesday',
 			'Thursday',
-			'Friday',
+			'Friday, and have a nice weekend',
 			'Saturday',
 		][new Date().getDay()];
 
