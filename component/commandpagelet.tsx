@@ -351,6 +351,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						name={field.Key}
 						autoFocus={autoFocus}
 						required={field.Required}
+						value={this.state.values[field.Key]}
 						onChange={this.onIntegerInputChange.bind(this)}
 					/>
 				);
