@@ -2,7 +2,7 @@ import { jsxChildType } from 'f61ui/types';
 import * as React from 'react';
 
 interface PanelProps {
-	heading: string;
+	heading: jsxChildType;
 	children: jsxChildType;
 }
 
