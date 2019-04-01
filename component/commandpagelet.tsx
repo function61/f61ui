@@ -137,7 +137,9 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 				<input type="submit" style={{ display: 'none' }} />
 
-				{this.state.submitError ? <DangerAlert text={this.state.submitError} /> : null}
+				{this.state.submitError ? (
+					<DangerAlert>{this.state.submitError}</DangerAlert>
+				) : null}
 			</form>
 		);
 	}
