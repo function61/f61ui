@@ -5,42 +5,49 @@ interface AlertCommonProps {
 	children: jsxChildType;
 }
 
+type Level = 'success' | 'info' | 'warning' | 'danger';
+
+function render(level: Level, children: jsxChildType) {
+	return (
+		<div className={`alert alert-${level}`} role="alert">
+			{children}
+		</div>
+	);
+}
+
 export class WarningAlert extends React.Component<AlertCommonProps, {}> {
 	render() {
-		return (
-			<div className="alert alert-warning" role="alert">
-				{this.props.children}
-			</div>
-		);
+		return render('warning', this.props.children);
 	}
 }
 
 export class InfoAlert extends React.Component<AlertCommonProps, {}> {
 	render() {
-		return (
-			<div className="alert alert-info" role="alert">
-				{this.props.children}
-			</div>
-		);
+		return render('info', this.props.children);
 	}
 }
 
 export class SuccessAlert extends React.Component<AlertCommonProps, {}> {
 	render() {
-		return (
-			<div className="alert alert-success" role="alert">
-				{this.props.children}
-			</div>
-		);
+		return render('success', this.props.children);
 	}
 }
 
 export class DangerAlert extends React.Component<AlertCommonProps, {}> {
 	render() {
-		return (
-			<div className="alert alert-danger" role="alert">
-				{this.props.children}
-			</div>
-		);
+		return render('danger', this.props.children);
+	}
+}
+
+// for when your level needs are dynamic
+
+interface AlertProps {
+	children: jsxChildType;
+	level: Level;
+}
+
+export class Alert extends React.Component<AlertProps, {}> {
+	render() {
+		return render(this.props.level, this.props.children);
 	}
 }
