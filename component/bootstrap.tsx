@@ -2,16 +2,22 @@ import { jsxChildType } from 'f61ui/types';
 import * as React from 'react';
 
 interface PanelProps {
-	heading: jsxChildType;
+	heading?: jsxChildType;
 	children: jsxChildType;
+	footer?: jsxChildType;
 }
 
 export class Panel extends React.Component<PanelProps, {}> {
 	render() {
 		return (
 			<div className="panel panel-default">
-				<div className="panel-heading">{this.props.heading}</div>
+				{this.props.heading ? (
+					<div className="panel-heading">{this.props.heading}</div>
+				) : (
+					''
+				)}
 				<div className="panel-body">{this.props.children}</div>
+				{this.props.footer ? <div className="panel-footer">{this.props.footer}</div> : ''}
 			</div>
 		);
 	}
