@@ -63,6 +63,14 @@ export function httpMustBeOk(response: Response): Promise<Response> {
 	return Promise.resolve(response);
 }
 
+export function makeQueryParams(path: string, queryParams: { [key: string]: string }): string {
+	const queryParamKvs = Object.keys(queryParams).map(
+		(key) => encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]),
+	);
+
+	return queryParamKvs.length === 0 ? path : path + '?' + queryParamKvs.join('&');
+}
+
 function readCsrfToken(): string | null {
 	// TODO: fix this botched way of reading the cookie value..
 	const csrfToken = /csrf_token=([^;]+)/.exec(document.cookie);
