@@ -21,6 +21,10 @@ export interface StructuredErrorResponse {
 	error_description: string;
 }
 
-export function dateToDateTime(date: dateRFC3339): datetimeRFC3339 {
+export function plainDateToDateTime(date: dateRFC3339): datetimeRFC3339 {
 	return (date + 'T00:00:00Z') as datetimeRFC3339;
+}
+
+export function dateObjToDateTime(date: Date): datetimeRFC3339 {
+	return date.toISOString() as datetimeRFC3339;
 }
