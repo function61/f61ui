@@ -38,8 +38,8 @@ export class Button extends React.Component<ButtonProps, {}> {
 	}
 }
 
-class Well extends React.Component<{}, {}> {
+export class Well extends React.Component<{}, {}> {
 	render() {
-		return <div className="well">{this.props.children}</div>
+		return <div className="well">{this.props.children}</div>;
 	}
 }
