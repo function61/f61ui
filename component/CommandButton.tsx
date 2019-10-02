@@ -86,6 +86,7 @@ function commandCrudNatureToIcon(nature: CrudNature): string {
 function btnClassFromCrudNature(nature: CrudNature): string {
 	switch (nature) {
 		case CrudNature.create:
+			return 'btn-success';
 		case CrudNature.update:
 			return 'btn-primary';
 		case CrudNature.delete:
@@ -223,7 +224,7 @@ export class CommandInlineForm extends React.Component<
 				/>
 
 				<button
-					className="btn btn-primary"
+					className={'btn ' + btnClassFromCrudNature(this.props.command.crudNature)}
 					onClick={() => {
 						this.save();
 					}}
