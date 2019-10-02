@@ -9,6 +9,7 @@ interface ModalDialogProps {
 	onSave: () => void;
 	onClose: () => void;
 	submitBtnClass: string;
+	submitTitle?: string;
 	submitEnabled: boolean;
 	loading: boolean;
 	children: jsxChildType;
@@ -87,7 +88,7 @@ export class ModalDialog extends React.Component<ModalDialogProps, {}> {
 								}}
 								className={`btn ${this.props.submitBtnClass}`}
 								disabled={!this.props.submitEnabled}>
-								{this.props.title}
+								{this.props.submitTitle || this.props.title}
 							</button>
 						</div>
 					</div>

@@ -10,6 +10,12 @@ export interface CommandDefinition {
 	additional_confirmation?: string;
 	crudNature: CrudNature;
 	fields: CommandField[];
+	settings: CommandSettings;
+}
+
+export interface CommandSettings {
+	// so there's no hesitation of "did I pick the right row doing this?"
+	disambiguation?: string;
 }
 
 export enum CommandFieldKind {

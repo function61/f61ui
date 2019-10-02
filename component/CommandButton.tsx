@@ -28,35 +28,6 @@ export class CommandButton extends React.Component<CommandButtonProps, CommandBu
 	}
 
 	render() {
-		const commandTitle = this.props.command.title;
-
-		const maybeDialog = this.state.dialogOpen ? (
-			<ModalDialog
-				title={commandTitle}
-				onClose={() => {
-					this.setState({ dialogOpen: false });
-				}}
-				onSave={() => {
-					this.save();
-				}}
-				loading={this.state.cmdState.processing}
-				submitBtnClass={btnClassFromCrudNature(this.props.command.crudNature)}
-				submitEnabled={this.state.cmdState.submitEnabled}>
-				<CommandPagelet
-					command={this.props.command}
-					onSubmit={() => {
-						this.save();
-					}}
-					onChanges={(cmdState) => {
-						this.setState({ cmdState });
-					}}
-					ref={(el) => {
-						this.cmdPagelet = el;
-					}}
-				/>
-			</ModalDialog>
-		) : null;
-
 		return (
 			<div style={{ display: 'inline-block' }}>
 				<a
@@ -64,10 +35,27 @@ export class CommandButton extends React.Component<CommandButtonProps, CommandBu
 					onClick={() => {
 						this.setState({ dialogOpen: true });
 					}}>
-					{commandTitle}
+					{this.props.command.title}
 				</a>
 
-				{maybeDialog}
+				{this.state.dialogOpen
+					? mkCommandDialog(
+							this.props.command,
+							this.state.cmdState,
+							() => {
+								this.setState({ dialogOpen: false });
+							},
+							() => {
+								this.save();
+							},
+							(cmdState: CommandChangesArgs) => {
+								this.setState({ cmdState });
+							},
+							(el: CommandPagelet) => {
+								this.cmdPagelet = el;
+							},
+					  )
+					: null}
 			</div>
 		);
 	}
@@ -117,36 +105,7 @@ export class CommandIcon extends React.Component<CommandIconProps, CommandIconSt
 	}
 
 	render() {
-		const commandTitle = this.props.command.title;
-
 		const icon = commandCrudNatureToIcon(this.props.command.crudNature);
-
-		const maybeDialog = this.state.dialogOpen ? (
-			<ModalDialog
-				title={commandTitle}
-				onClose={() => {
-					this.setState({ dialogOpen: false });
-				}}
-				onSave={() => {
-					this.save();
-				}}
-				loading={this.state.cmdState.processing}
-				submitBtnClass={btnClassFromCrudNature(this.props.command.crudNature)}
-				submitEnabled={this.state.cmdState.submitEnabled}>
-				<CommandPagelet
-					command={this.props.command}
-					onSubmit={() => {
-						this.save();
-					}}
-					onChanges={(cmdState) => {
-						this.setState({ cmdState });
-					}}
-					ref={(el) => {
-						this.cmdPagelet = el;
-					}}
-				/>
-			</ModalDialog>
-		) : null;
 
 		return (
 			<span
@@ -154,8 +113,25 @@ export class CommandIcon extends React.Component<CommandIconProps, CommandIconSt
 				onClick={() => {
 					this.setState({ dialogOpen: true });
 				}}
-				title={commandTitle}>
-				{maybeDialog}
+				title={this.props.command.title}>
+				{this.state.dialogOpen
+					? mkCommandDialog(
+							this.props.command,
+							this.state.cmdState,
+							() => {
+								this.setState({ dialogOpen: false });
+							},
+							() => {
+								this.save();
+							},
+							(cmdState: CommandChangesArgs) => {
+								this.setState({ cmdState });
+							},
+							(el: CommandPagelet) => {
+								this.cmdPagelet = el;
+							},
+					  )
+					: null}
 			</span>
 		);
 	}
@@ -180,35 +156,6 @@ export class CommandLink extends React.Component<CommandLinkProps, CommandLinkSt
 	}
 
 	render() {
-		const commandTitle = this.props.command.title;
-
-		const maybeDialog = this.state.dialogOpen ? (
-			<ModalDialog
-				title={commandTitle}
-				onClose={() => {
-					this.setState({ dialogOpen: false });
-				}}
-				onSave={() => {
-					this.save();
-				}}
-				loading={this.state.cmdState.processing}
-				submitBtnClass={btnClassFromCrudNature(this.props.command.crudNature)}
-				submitEnabled={this.state.cmdState.submitEnabled}>
-				<CommandPagelet
-					command={this.props.command}
-					onSubmit={() => {
-						this.save();
-					}}
-					onChanges={(cmdState) => {
-						this.setState({ cmdState });
-					}}
-					ref={(el) => {
-						this.cmdPagelet = el;
-					}}
-				/>
-			</ModalDialog>
-		) : null;
-
 		return (
 			<a
 				className="fauxlink"
@@ -216,8 +163,25 @@ export class CommandLink extends React.Component<CommandLinkProps, CommandLinkSt
 					this.setState({ dialogOpen: true });
 				}}
 				key={this.props.command.key}>
-				{commandTitle}
-				{maybeDialog}
+				{this.props.command.title}
+				{this.state.dialogOpen
+					? mkCommandDialog(
+							this.props.command,
+							this.state.cmdState,
+							() => {
+								this.setState({ dialogOpen: false });
+							},
+							() => {
+								this.save();
+							},
+							(cmdState: CommandChangesArgs) => {
+								this.setState({ cmdState });
+							},
+							(el: CommandPagelet) => {
+								this.cmdPagelet = el;
+							},
+					  )
+					: null}
 			</a>
 		);
 	}
@@ -275,4 +239,31 @@ export class CommandInlineForm extends React.Component<
 	save() {
 		this.cmdPagelet!.submitAndReloadOnSuccess();
 	}
+}
+
+function mkCommandDialog(
+	command: CommandDefinition,
+	cmdState: CommandChangesArgs,
+	close: () => void,
+	submit: () => void,
+	change: (cmdState: CommandChangesArgs) => void,
+	ref: (el: CommandPagelet) => void,
+) {
+	const dialogTitle =
+		command.settings.disambiguation !== undefined
+			? `${command.title} (${command.settings.disambiguation})`
+			: command.title;
+
+	return (
+		<ModalDialog
+			title={dialogTitle}
+			onClose={close}
+			onSave={submit}
+			loading={cmdState.processing}
+			submitTitle={command.title}
+			submitBtnClass={btnClassFromCrudNature(command.crudNature)}
+			submitEnabled={cmdState.submitEnabled}>
+			<CommandPagelet command={command} onSubmit={submit} onChanges={change} ref={ref} />
+		</ModalDialog>
+	);
 }
