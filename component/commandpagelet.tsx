@@ -305,6 +305,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						type="password"
 						className="form-control"
 						name={field.Key}
+						placeholder={field.Placeholder}
 						autoFocus={autoFocus}
 						required={field.Required}
 						value={this.state.values[field.Key]}
@@ -317,6 +318,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						type="text"
 						className="form-control"
 						name={field.Key}
+						placeholder={field.Placeholder}
 						autoFocus={autoFocus}
 						required={field.Required}
 						value={this.state.values[field.Key]}
@@ -328,6 +330,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 					<input
 						type="date"
 						name={field.Key}
+						placeholder={field.Placeholder}
 						autoFocus={autoFocus}
 						className="form-control"
 						onChange={this.onInputChange.bind(this)}
@@ -337,6 +340,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 				return (
 					<textarea
 						name={field.Key}
+						placeholder={field.Placeholder}
 						autoFocus={autoFocus}
 						required={field.Required}
 						className="form-control"
@@ -351,6 +355,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						type="number"
 						className="form-control"
 						name={field.Key}
+						placeholder={field.Placeholder}
 						autoFocus={autoFocus}
 						required={field.Required}
 						value={this.state.values[field.Key]}

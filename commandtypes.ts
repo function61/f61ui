@@ -36,5 +36,6 @@ export interface CommandField {
 	DefaultValueBoolean?: boolean;
 	DefaultValueNumber?: number;
 	Help?: string;
+	Placeholder?: string;
 	ValidationRegex: string;
 }
