@@ -106,7 +106,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 				<div className={`form-group ${validationFailedClass}`} key={field.Key}>
 					<div>
 						<label style={{ marginRight: '8px' }}>
-							{field.Key} {field.Required ? '*' : ''}
+							{field.Title || field.Key} {field.Required ? '*' : ''}
 						</label>
 						{field.Help ? <Info text={field.Help} /> : ''}
 					</div>

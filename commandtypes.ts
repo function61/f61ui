@@ -29,6 +29,7 @@ export enum CommandFieldKind {
 
 export interface CommandField {
 	Key: string;
+	Title: string;
 	Required: boolean;
 	HideIfDefaultValue: boolean;
 	Kind: CommandFieldKind;
