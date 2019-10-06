@@ -1,3 +1,4 @@
+import { ClipboardButton } from 'f61ui/component/clipboardbutton';
 import * as React from 'react';
 
 interface SecretRevealProps {
@@ -27,6 +28,7 @@ export class SecretReveal extends React.Component<SecretRevealProps, SecretRevea
 						this.setState({ visible: !this.state.visible });
 					}}
 				/>
+				<ClipboardButton text={this.props.secret} />
 			</span>
 		);
 	}
