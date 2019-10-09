@@ -1,10 +1,9 @@
-import { jsxChildType } from 'f61ui/types';
 import * as React from 'react';
 
 interface PanelProps {
-	heading?: jsxChildType;
-	children: jsxChildType;
-	footer?: jsxChildType;
+	heading?: React.ReactNode;
+	children: React.ReactNode;
+	footer?: React.ReactNode;
 }
 
 export class Panel extends React.Component<PanelProps, {}> {

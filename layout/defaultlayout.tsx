@@ -1,6 +1,5 @@
 import { Breadcrumb, BreadcrumbTrail } from 'f61ui/component/breadcrumbtrail';
 import NavigationTabs, { NavLink } from 'f61ui/component/navigation';
-import { jsxChildType } from 'f61ui/types';
 import * as React from 'react';
 
 interface DefaultLayoutProps {
@@ -11,8 +10,8 @@ interface DefaultLayoutProps {
 	logoUrl: string;
 	navLinks: NavLink[];
 	breadcrumbs: Breadcrumb[];
-	content: jsxChildType;
-	searchWidget?: jsxChildType;
+	content: React.ReactNode;
+	searchWidget?: React.ReactNode;
 }
 
 export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {

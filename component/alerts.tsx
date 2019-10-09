@@ -1,13 +1,12 @@
-import { jsxChildType } from 'f61ui/types';
 import * as React from 'react';
 
 interface AlertCommonProps {
-	children: jsxChildType;
+	children: React.ReactNode;
 }
 
 type Level = 'success' | 'info' | 'warning' | 'danger';
 
-function render(level: Level, children: jsxChildType) {
+function render(level: Level, children: React.ReactNode) {
 	return (
 		<div className={`alert alert-${level}`} role="alert">
 			{children}
@@ -42,7 +41,7 @@ export class DangerAlert extends React.Component<AlertCommonProps, {}> {
 // for when your level needs are dynamic
 
 interface AlertProps {
-	children: jsxChildType;
+	children: React.ReactNode;
 	level: Level;
 }
 
