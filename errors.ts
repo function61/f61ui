@@ -8,7 +8,11 @@ export function defaultErrorHandler(err: Error | StructuredErrorResponse) {
 		return;
 	}
 
-	alert(`${ser.error_code}: ${ser.error_description}`);
+	alert(formatStructuredErrorResponse(ser));
+}
+
+export function formatStructuredErrorResponse(ser: StructuredErrorResponse): string {
+	return `${ser.error_code}: ${ser.error_description}`;
 }
 
 export function handleKnownGlobalErrors(err: StructuredErrorResponse): boolean {
