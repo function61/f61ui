@@ -13,7 +13,7 @@ export function globalConfigure(conf: GlobalConfig) {
 
 export function globalConfig(): GlobalConfig {
 	if (!gConv) {
-		throw new Error('not configured');
+		throw new Error('globalConfig: not configured');
 	}
 
 	return gConv;
