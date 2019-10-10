@@ -206,7 +206,7 @@ export class CommandInlineForm extends React.Component<
 	render() {
 		const submitEnabled = this.state.cmdState && this.state.cmdState.submitEnabled;
 		const maybeLoading =
-			this.state.cmdState && this.state.cmdState.processing ? <Loading /> : '';
+			this.state.cmdState && this.state.cmdState.processing ? <Loading /> : null;
 
 		return (
 			<div>

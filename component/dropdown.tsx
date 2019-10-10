@@ -9,7 +9,7 @@ export class Dropdown extends React.Component<DropdownProps, {}> {
 	render() {
 		const maybeLabel = this.props.label ? this.props.label + ' ' : '';
 
-		const children: any[] =
+		const children: React.ReactNode[] =
 			this.props.children instanceof Array ? this.props.children : [this.props.children];
 
 		const items = children.map((child, idx) => {

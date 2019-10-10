@@ -12,11 +12,9 @@ export class Panel extends React.Component<PanelProps, {}> {
 			<div className="panel panel-default">
 				{this.props.heading ? (
 					<div className="panel-heading">{this.props.heading}</div>
-				) : (
-					''
-				)}
+				) : null}
 				<div className="panel-body">{this.props.children}</div>
-				{this.props.footer ? <div className="panel-footer">{this.props.footer}</div> : ''}
+				{this.props.footer ? <div className="panel-footer">{this.props.footer}</div> : null}
 			</div>
 		);
 	}
