@@ -1,9 +1,9 @@
-import { reloadCurrentPage } from 'f61ui/browserutils';
+import { navigateTo, reloadCurrentPage } from 'f61ui/browserutils';
 import { CommandDefinition, CommandField, CommandFieldKind } from 'f61ui/commandtypes';
 import { DangerAlert } from 'f61ui/component/alerts';
 import { Info } from 'f61ui/component/info';
 import { coerceToStructuredErrorResponse, handleKnownGlobalErrors } from 'f61ui/errors';
-import { postJson } from 'f61ui/httputil';
+import { postJsonReturningVoid } from 'f61ui/httputil';
 import { StructuredErrorResponse } from 'f61ui/types';
 import { unrecognizedValue } from 'f61ui/utils';
 import * as React from 'react';
@@ -145,7 +145,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 	}
 
 	// official submit, which should trigger validation
-	submit(): Promise<void> {
+	submit(): Promise<Response> {
 		// disable submit button while server is processing
 		this.props.onChanges({
 			processing: true,
@@ -179,8 +179,24 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 	submitAndReloadOnSuccess(): void {
 		this.submit().then(
-			() => {
-				reloadCurrentPage();
+			(response) => {
+				const redirectFn = this.props.command.settings.redirect;
+
+				if (redirectFn) {
+					const recordId = response.headers.get('x-created-record-id'); // case insensitive
+
+					if (!recordId) {
+						throw new Error(
+							`command has redirectFn specified, but server did not provide x-created-record-id`,
+						);
+					}
+
+					const redirectTarget = redirectFn(recordId);
+
+					navigateTo(redirectTarget);
+				} else {
+					reloadCurrentPage();
+				}
 			},
 			() => {
 				/* noop */
@@ -226,13 +242,12 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		return true;
 	}
 
-	private execute(): Promise<void> {
+	private execute(): Promise<Response> {
 		if (!this.isEverythingValid()) {
 			return Promise.reject(new Error('Invalid form data'));
 		}
 
-		// FIXME: this doesn't actually return void
-		return postJson<CommandValueCollection, void>(
+		return postJsonReturningVoid<CommandValueCollection>(
 			`/command/${this.props.command.key}`,
 			this.state.values,
 		);

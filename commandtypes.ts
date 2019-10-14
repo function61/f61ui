@@ -16,6 +16,7 @@ export interface CommandDefinition {
 export interface CommandSettings {
 	// so there's no hesitation of "did I pick the right row doing this?"
 	disambiguation?: string;
+	redirect?: (id: string) => string;
 }
 
 export enum CommandFieldKind {
