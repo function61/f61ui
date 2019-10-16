@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export interface Breadcrumb {
 	url?: string;
-	title: string;
+	title: React.ReactNode;
 }
 
 interface BreadcrumbTrailProps {
