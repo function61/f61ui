@@ -38,6 +38,16 @@ export class ModalDialog extends React.Component<ModalDialogProps, {}> {
 		});
 	}
 
+	componentWillUnmount() {
+		// if we'll navigate to another page (without doing full page reload) and this
+		// react component will just unmount without calling hide, the dialog goes away
+		// like expected, but the modal layer would be left behind
+		const ref = this.dialogRef;
+		if (ref) {
+			jQuery(ref).modal('hide');
+		}
+	}
+
 	render() {
 		const labelName = this.modalId + 'Label';
 
