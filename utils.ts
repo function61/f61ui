@@ -13,7 +13,11 @@ export function uniqueDomId(): number {
 }
 
 export function relativeDateFormat(dateIso: datetimeRFC3339): string {
-	return formatDistance(new Date(dateIso), new Date(), { addSuffix: true });
+	return formatDistance(new Date(dateIso), new Date(), { addSuffix: true, includeSeconds: true });
+}
+
+export function formatDistance2(a: datetimeRFC3339, b: datetimeRFC3339): string {
+	return formatDistance(new Date(a), new Date(b), { includeSeconds: true });
 }
 
 // - cannot "await" unless "await" sits in a function that itself is "async"
