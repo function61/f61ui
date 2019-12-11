@@ -7,7 +7,8 @@ interface DefaultLayoutProps {
 	version: string;
 	appName: string;
 	appHomepage: string;
-	logoUrl: string;
+	logoClickUrl: string;
+	logoNode: React.ReactNode;
 	navLinks: NavLink[];
 	breadcrumbs: Breadcrumb[];
 	content: React.ReactNode;
@@ -22,8 +23,10 @@ export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {
 			<div>
 				<div className="header clearfix">
 					<div className="pull-left">
-						<h3 className="text-muted">
-							<a href={this.props.logoUrl}>{this.props.appName}</a>
+						<h3 className="app-logo text-muted">
+							<a href={this.props.logoClickUrl}>
+								{this.props.logoNode || this.props.appName}
+							</a>
 						</h3>
 					</div>
 
