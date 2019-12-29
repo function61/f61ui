@@ -38,6 +38,7 @@ export interface CommandField {
 	Required: boolean;
 	HideIfDefaultValue: boolean;
 	Kind: CommandFieldKind;
+	Unit: string | null;
 	DefaultValueString?: string;
 	DefaultValueBoolean?: boolean;
 	DefaultValueNumber?: number;

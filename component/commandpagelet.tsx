@@ -105,17 +105,28 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 			const validationFailedClass = valid ? '' : 'has-error';
 
+			const addon = field.Unit && <div className="input-group-addon">{field.Unit}</div>;
+
 			// TODO: label[for]
+			// curiously, if we have input-group without addon the input doesn't get rounded
+			// corners like it should get. this is why we wrap input conditionally..
 			return (
 				<div className={`form-group ${validationFailedClass}`} key={field.Key}>
 					<div>
 						<label style={{ marginRight: '8px' }}>
 							{field.Title || field.Key} {field.Required ? '*' : ''}
 						</label>
-						{field.Help ? <Info text={field.Help} /> : ''}
+						{field.Help && <Info text={field.Help} />}
 					</div>
 
-					{input}
+					{addon ? (
+						<div className="input-group" style={{ width: '100%' }}>
+							{input}
+							{addon}
+						</div>
+					) : (
+						input
+					)}
 				</div>
 			);
 		});
