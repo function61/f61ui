@@ -13,6 +13,7 @@ export interface CommandDefinition {
 	crudNature: CrudNature;
 	fields: CommandField[];
 	settings: CommandSettings;
+	info: string[];
 }
 
 export interface CommandSettings {

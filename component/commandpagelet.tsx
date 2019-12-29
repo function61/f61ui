@@ -1,6 +1,6 @@
 import { navigateTo, reloadCurrentPage } from 'f61ui/browserutils';
 import { CommandDefinition, CommandField, CommandFieldKind } from 'f61ui/commandtypes';
-import { DangerAlert } from 'f61ui/component/alerts';
+import { DangerAlert, InfoAlert } from 'f61ui/component/alerts';
 import { Info } from 'f61ui/component/info';
 import {
 	coerceToStructuredErrorResponse,
@@ -128,6 +128,20 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 			);
 		}
 
+		const footer =
+			this.props.command.info.length > 0 ? (
+				<InfoAlert>
+					{this.props.command.info.map((info, idx) => (
+						<p>
+							{idx === 0 && (
+								<span className="glyphicon glyphicon-info-sign">&nbsp;</span>
+							)}{' '}
+							{info}
+						</p>
+					))}
+				</InfoAlert>
+			) : null;
+
 		// hidden submit included because otherwise onSubmit does not work except if form has only one input
 		// https://stackoverflow.com/a/40400840
 
@@ -144,6 +158,8 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 				{this.state.submitError ? (
 					<DangerAlert>{this.state.submitError}</DangerAlert>
 				) : null}
+
+				{footer}
 			</form>
 		);
 	}
