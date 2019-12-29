@@ -2,7 +2,11 @@ import { navigateTo, reloadCurrentPage } from 'f61ui/browserutils';
 import { CommandDefinition, CommandField, CommandFieldKind } from 'f61ui/commandtypes';
 import { DangerAlert } from 'f61ui/component/alerts';
 import { Info } from 'f61ui/component/info';
-import { coerceToStructuredErrorResponse, handleKnownGlobalErrors } from 'f61ui/errors';
+import {
+	coerceToStructuredErrorResponse,
+	formatStructuredErrorResponse,
+	handleKnownGlobalErrors,
+} from 'f61ui/errors';
 import { postJsonReturningVoid } from 'f61ui/httputil';
 import { StructuredErrorResponse } from 'f61ui/types';
 import { unrecognizedValue } from 'f61ui/utils';
@@ -168,7 +172,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 					return;
 				}
 
-				this.setState({ submitError: `${ser.error_code}: ${ser.error_description}` });
+				this.setState({ submitError: formatStructuredErrorResponse(ser) });
 
 				this.broadcastChanges();
 			},
