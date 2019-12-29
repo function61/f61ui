@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 export enum CrudNature {
 	update = 'update',
 	delete = 'delete',
@@ -14,8 +16,9 @@ export interface CommandDefinition {
 }
 
 export interface CommandSettings {
-	// so there's no hesitation of "did I pick the right row doing this?"
+	// so there's no hesitation of "did I pick the right row for this action?"
 	disambiguation?: string;
+	helpUrl?: string;
 	redirect?: (id: string) => string;
 }
 

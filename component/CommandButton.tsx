@@ -4,6 +4,7 @@ import {
 	CommandPagelet,
 	initialCommandState,
 } from 'f61ui/component/commandpagelet';
+import { DocsLink } from 'f61ui/component/docslink';
 import { Loading } from 'f61ui/component/loading';
 import { ModalDialog } from 'f61ui/component/modaldialog';
 import { unrecognizedValue } from 'f61ui/utils';
@@ -257,7 +258,13 @@ function mkCommandDialog(
 
 	return (
 		<ModalDialog
-			title={dialogTitle}
+			title={
+				<span>
+					{dialogTitle}
+					&nbsp;
+					{command.settings.helpUrl && <DocsLink url={command.settings.helpUrl} />}
+				</span>
+			}
 			onClose={close}
 			onSave={submit}
 			loading={cmdState.processing}
