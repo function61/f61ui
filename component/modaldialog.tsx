@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 interface ModalDialogProps {
-	title: string;
+	title: React.ReactNode;
 	onSave: () => void;
 	onClose: () => void;
 	submitBtnClass: string;
