@@ -1,4 +1,5 @@
 import { CommandDefinition, CrudNature } from 'f61ui/commandtypes';
+import { Glyphicon } from 'f61ui/component/bootstrap';
 import {
 	CommandChangesArgs,
 	CommandPagelet,
@@ -71,14 +72,14 @@ interface CommandIconState {
 	cmdState: CommandChangesArgs;
 }
 
-function commandCrudNatureToIcon(nature: CrudNature): string {
+function commandCrudNatureToIcon(nature: CrudNature, title: string): React.ReactNode {
 	switch (nature) {
 		case CrudNature.create:
-			return 'glyphicon-plus';
+			return <Glyphicon icon="plus" title={title} />;
 		case CrudNature.update:
-			return 'glyphicon-pencil';
+			return <Glyphicon icon="pencil" title={title} />;
 		case CrudNature.delete:
-			return 'glyphicon-remove';
+			return <Glyphicon icon="remove" title={title} />;
 		default:
 			throw unrecognizedValue(nature);
 	}
@@ -107,33 +108,30 @@ export class CommandIcon extends React.Component<CommandIconProps, CommandIconSt
 	}
 
 	render() {
-		const icon = commandCrudNatureToIcon(this.props.command.crudNature);
-
 		return (
 			<span
-				className={`glyphicon ${icon} hovericon margin-left`}
+				className="hovericon"
 				onClick={() => {
 					this.setState({ dialogOpen: true });
-				}}
-				title={this.props.command.title}>
-				{this.state.dialogOpen
-					? mkCommandDialog(
-							this.props.command,
-							this.state.cmdState,
-							() => {
-								this.setState({ dialogOpen: false });
-							},
-							() => {
-								this.save();
-							},
-							(cmdState: CommandChangesArgs) => {
-								this.setState({ cmdState });
-							},
-							(el: CommandPagelet) => {
-								this.cmdPagelet = el;
-							},
-					  )
-					: null}
+				}}>
+				{commandCrudNatureToIcon(this.props.command.crudNature, this.props.command.title)}
+				{this.state.dialogOpen &&
+					mkCommandDialog(
+						this.props.command,
+						this.state.cmdState,
+						() => {
+							this.setState({ dialogOpen: false });
+						},
+						() => {
+							this.save();
+						},
+						(cmdState: CommandChangesArgs) => {
+							this.setState({ cmdState });
+						},
+						(el: CommandPagelet) => {
+							this.cmdPagelet = el;
+						},
+					)}
 			</span>
 		);
 	}

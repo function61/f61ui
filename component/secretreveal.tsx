@@ -1,3 +1,4 @@
+import { Glyphicon } from 'f61ui/component/bootstrap';
 import { ClipboardButton } from 'f61ui/component/clipboardbutton';
 import * as React from 'react';
 
@@ -15,19 +16,18 @@ export class SecretReveal extends React.Component<SecretRevealProps, SecretRevea
 	render() {
 		const secretVisibleOrNot = this.state.visible ? this.props.secret : '********';
 
-		const className = this.state.visible
-			? 'glyphicon glyphicon-eye-close hovericon margin-left'
-			: 'glyphicon glyphicon-eye-open hovericon margin-left';
+		const icon = this.state.visible ? 'eye-close' : 'eye-open';
 
 		return (
 			<span>
 				{secretVisibleOrNot}
 				<span
-					className={className}
+					className="hovericon margin-left"
 					onClick={() => {
 						this.setState({ visible: !this.state.visible });
-					}}
-				/>
+					}}>
+					<Glyphicon icon={icon} />
+				</span>
 				<ClipboardButton text={this.props.secret} />
 			</span>
 		);

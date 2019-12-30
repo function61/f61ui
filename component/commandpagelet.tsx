@@ -1,6 +1,7 @@
 import { navigateTo, reloadCurrentPage } from 'f61ui/browserutils';
 import { CommandDefinition, CommandField, CommandFieldKind } from 'f61ui/commandtypes';
 import { DangerAlert, InfoAlert } from 'f61ui/component/alerts';
+import { Glyphicon } from 'f61ui/component/bootstrap';
 import { Info } from 'f61ui/component/info';
 import {
 	coerceToStructuredErrorResponse,
@@ -144,10 +145,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 				<InfoAlert>
 					{this.props.command.info.map((info, idx) => (
 						<p>
-							{idx === 0 && (
-								<span className="glyphicon glyphicon-info-sign">&nbsp;</span>
-							)}{' '}
-							{info}
+							{idx === 0 && <Glyphicon icon="info-sign" />} {info}
 						</p>
 					))}
 				</InfoAlert>

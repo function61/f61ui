@@ -1,3 +1,4 @@
+import { Glyphicon } from 'f61ui/component/bootstrap';
 import * as React from 'react';
 
 interface InfoProps {
@@ -6,6 +7,6 @@ interface InfoProps {
 
 export class Info extends React.Component<InfoProps, {}> {
 	render() {
-		return <span className="glyphicon glyphicon-info-sign" title={this.props.text} />;
+		return <Glyphicon icon="info-sign" title={this.props.text} />;
 	}
 }
