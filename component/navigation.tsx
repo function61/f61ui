@@ -16,7 +16,7 @@ export function renderNavLink(link: NavLink): React.ReactNode {
 			<a href={link.url}>
 				{link.glyphicon && <Glyphicon icon={link.glyphicon} />}
 				&nbsp;
-				<span className="margin-left">{link.title}</span>
+				<span className={link.glyphicon ? 'margin-left' : ''}>{link.title}</span>
 			</a>
 		</li>
 	);
