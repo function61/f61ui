@@ -316,3 +316,43 @@ export type GlyphiconIcon =
 	| 'menu-right'
 	| 'menu-down'
 	| 'menu-up';
+
+interface LabelProps {
+	title?: string;
+	children: React.ReactNode;
+}
+
+export class DefaultLabel extends React.Component<LabelProps, {}> {
+	render() {
+		return label(this.props, 'default');
+	}
+}
+
+export class SuccessLabel extends React.Component<LabelProps, {}> {
+	render() {
+		return label(this.props, 'success');
+	}
+}
+
+export class WarningLabel extends React.Component<LabelProps, {}> {
+	render() {
+		return label(this.props, 'warning');
+	}
+}
+
+export class DangerLabel extends React.Component<LabelProps, {}> {
+	render() {
+		return label(this.props, 'danger');
+	}
+}
+
+function label(
+	props: LabelProps,
+	visualStyle: 'default' | 'success' | 'warning' | 'danger',
+): React.ReactNode {
+	return (
+		<span className={'label label-' + visualStyle} title={props.title}>
+			{props.children}
+		</span>
+	);
+}
