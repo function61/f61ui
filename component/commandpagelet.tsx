@@ -183,11 +183,11 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 		this.setState({ submitError: '' });
 
-		const execResult = this.execute();
+		const response = this.validateAndPost();
 
 		// whether fulfilled or rejected, return submitEnabled
 		// state back to what it should be
-		execResult.then(
+		response.then(
 			() => {
 				this.broadcastChanges();
 			},
@@ -203,7 +203,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 			},
 		);
 
-		return execResult;
+		return response;
 	}
 
 	submitAndReloadOnSuccess(): void {
@@ -222,13 +222,16 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 					const redirectTarget = redirectFn(recordId);
 
-					navigateTo(redirectTarget);
+					// redirectFn can return '' to signify it handled redirection itself
+					if (redirectTarget) {
+						navigateTo(redirectTarget);
+					}
 				} else {
 					reloadCurrentPage();
 				}
 			},
 			() => {
-				/* noop */
+				/* noop, errors were already handled in submit() */
 			},
 		);
 	}
@@ -271,7 +274,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		return true;
 	}
 
-	private execute(): Promise<Response> {
+	private validateAndPost(): Promise<Response> {
 		if (!this.isEverythingValid()) {
 			return Promise.reject(new Error('Invalid form data'));
 		}
