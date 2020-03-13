@@ -31,7 +31,7 @@ export function coerceToStructuredErrorResponse(
 		return err;
 	}
 
-	return { error_code: 'generic_error', error_description: err.toString() };
+	return { error_code: 'generic', error_description: err.toString() };
 }
 
 export function isStructuredErrorResponse(
