@@ -37,5 +37,5 @@ export function coerceToStructuredErrorResponse(
 export function isStructuredErrorResponse(
 	err: StructuredErrorResponse | {},
 ): err is StructuredErrorResponse {
-	return 'error_code' in (err as StructuredErrorResponse);
+	return typeof err === 'object' && 'error_code' in (err as StructuredErrorResponse);
 }
