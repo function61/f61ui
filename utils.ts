@@ -1,5 +1,5 @@
 import { formatDistance } from 'date-fns';
-import { defaultErrorHandler } from 'f61ui/errors';
+import { defaultErrorHandler, formatAnyError } from 'f61ui/errors';
 import { datetimeRFC3339 } from 'f61ui/types';
 
 export function unrecognizedValue(value: never): never {
@@ -25,9 +25,18 @@ export function formatDistance2(a: datetimeRFC3339, b: datetimeRFC3339): string 
 //   complains if your *caller* calls this function whose promise will never reject
 // - therefore this hack was made to please tslint
 export function shouldAlwaysSucceed(prom: Promise<any>): void {
-	prom.then(() => {
-		/* noop */
-	}, defaultErrorHandler);
+	prom.then(
+		() => {
+			/* noop */
+		},
+		(innerErr) => {
+			const outerErr = new Error(
+				'shouldAlwaysSucceed: problem in error branch?: ' + formatAnyError(innerErr),
+			);
+
+			defaultErrorHandler(outerErr);
+		},
+	);
 }
 
 export function focusRetainer(logicThatMessesUpFocus: () => void) {
