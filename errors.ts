@@ -15,6 +15,10 @@ export function formatStructuredErrorResponse(ser: StructuredErrorResponse): str
 	return `${ser.error_code}: ${ser.error_description}`;
 }
 
+export function formatAnyError(err: Error | StructuredErrorResponse): string {
+	return formatStructuredErrorResponse(coerceToStructuredErrorResponse(err));
+}
+
 export function handleKnownGlobalErrors(err: StructuredErrorResponse): boolean {
 	const handler = globalConfig().knownGlobalErrorsHandler;
 	if (!handler) {
