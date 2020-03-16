@@ -8,7 +8,7 @@ import {
 import { DocsLink } from 'f61ui/component/docslink';
 import { Loading } from 'f61ui/component/loading';
 import { ModalDialog } from 'f61ui/component/modaldialog';
-import { unrecognizedValue } from 'f61ui/utils';
+import { shouldAlwaysSucceed, unrecognizedValue } from 'f61ui/utils';
 import * as React from 'react';
 
 interface CommandButtonProps {
@@ -26,7 +26,7 @@ export class CommandButton extends React.Component<CommandButtonProps, CommandBu
 	private cmdPagelet: CommandPagelet | null = null;
 
 	save() {
-		this.cmdPagelet!.submitAndReloadOnSuccess();
+		shouldAlwaysSucceed(this.cmdPagelet!.submitAndReloadOnSuccess());
 	}
 
 	render() {
@@ -104,7 +104,7 @@ export class CommandIcon extends React.Component<CommandIconProps, CommandIconSt
 	private cmdPagelet: CommandPagelet | null = null;
 
 	save() {
-		this.cmdPagelet!.submitAndReloadOnSuccess();
+		shouldAlwaysSucceed(this.cmdPagelet!.submitAndReloadOnSuccess());
 	}
 
 	render() {
@@ -152,7 +152,7 @@ export class CommandLink extends React.Component<CommandLinkProps, CommandLinkSt
 	private cmdPagelet: CommandPagelet | null = null;
 
 	save() {
-		this.cmdPagelet!.submitAndReloadOnSuccess();
+		shouldAlwaysSucceed(this.cmdPagelet!.submitAndReloadOnSuccess());
 	}
 
 	render() {
@@ -237,7 +237,7 @@ export class CommandInlineForm extends React.Component<
 	}
 
 	save() {
-		this.cmdPagelet!.submitAndReloadOnSuccess();
+		shouldAlwaysSucceed(this.cmdPagelet!.submitAndReloadOnSuccess());
 	}
 }
 

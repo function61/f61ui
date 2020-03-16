@@ -9,7 +9,6 @@ import {
 	handleKnownGlobalErrors,
 } from 'f61ui/errors';
 import { postJsonReturningVoid } from 'f61ui/httputil';
-import { StructuredErrorResponse } from 'f61ui/types';
 import { unrecognizedValue } from 'f61ui/utils';
 import * as React from 'react';
 
@@ -173,8 +172,40 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		);
 	}
 
+	async submitAndReloadOnSuccess() {
+		try {
+			const response = await this.submit();
+			const redirectFn = this.props.command.settings.redirect;
+
+			if (redirectFn) {
+				const recordId = response.headers.get('x-created-record-id'); // case insensitive
+
+				if (!recordId) {
+					throw new Error(
+						`command has redirectFn specified, but server did not provide x-created-record-id`,
+					);
+				}
+
+				const redirectTarget = redirectFn(recordId);
+
+				// redirectFn can return '' to signify it handled redirection itself
+				if (redirectTarget) {
+					navigateTo(redirectTarget);
+				}
+			} else {
+				reloadCurrentPage();
+			}
+		} catch (err) {
+			const ser = coerceToStructuredErrorResponse(err);
+
+			if (!handleKnownGlobalErrors(ser)) {
+				this.setState({ submitError: formatStructuredErrorResponse(ser) });
+			}
+		}
+	}
+
 	// official submit, which should trigger validation
-	submit(): Promise<Response> {
+	private async submit(): Promise<Response> {
 		// disable submit button while server is processing
 		this.props.onChanges({
 			processing: true,
@@ -183,57 +214,13 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 		this.setState({ submitError: '' });
 
-		const response = this.validateAndPost();
-
-		// whether fulfilled or rejected, return submitEnabled
-		// state back to what it should be
-		response.then(
-			() => {
-				this.broadcastChanges();
-			},
-			(err: Error | StructuredErrorResponse) => {
-				const ser = coerceToStructuredErrorResponse(err);
-				if (handleKnownGlobalErrors(ser)) {
-					return;
-				}
-
-				this.setState({ submitError: formatStructuredErrorResponse(ser) });
-
-				this.broadcastChanges();
-			},
-		);
-
-		return response;
-	}
-
-	submitAndReloadOnSuccess(): void {
-		this.submit().then(
-			(response) => {
-				const redirectFn = this.props.command.settings.redirect;
-
-				if (redirectFn) {
-					const recordId = response.headers.get('x-created-record-id'); // case insensitive
-
-					if (!recordId) {
-						throw new Error(
-							`command has redirectFn specified, but server did not provide x-created-record-id`,
-						);
-					}
-
-					const redirectTarget = redirectFn(recordId);
-
-					// redirectFn can return '' to signify it handled redirection itself
-					if (redirectTarget) {
-						navigateTo(redirectTarget);
-					}
-				} else {
-					reloadCurrentPage();
-				}
-			},
-			() => {
-				/* noop, errors were already handled in submit() */
-			},
-		);
+		try {
+			return await this.validateAndPost();
+		} finally {
+			// whether fulfilled or rejected, return submitEnabled
+			// state back to what it should be
+			this.broadcastChanges();
+		}
 	}
 
 	private createAdditionalConfirmationFormGroup(question: string) {
@@ -274,17 +261,19 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		return true;
 	}
 
-	private validateAndPost(): Promise<Response> {
+	private async validateAndPost(): Promise<Response> {
 		if (!this.isEverythingValid()) {
 			return Promise.reject(new Error('Invalid form data'));
 		}
 
-		return postJsonReturningVoid<CommandValueCollection>(
+		return await postJsonReturningVoid<CommandValueCollection>(
 			`/command/${this.props.command.key}`,
 			this.state.values,
 		);
 	}
 
+	// lets outside components who are dependent on our "submitEnabled" (= data valid)
+	// and "processing" states update their UIs
 	private broadcastChanges() {
 		this.props.onChanges({
 			submitEnabled: this.isEverythingValid(),
