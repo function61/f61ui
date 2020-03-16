@@ -198,7 +198,9 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		} catch (err) {
 			const ser = coerceToStructuredErrorResponse(err);
 
-			if (!handleKnownGlobalErrors(ser)) {
+			if (this.props.command.settings.errorHandler) {
+				this.props.command.settings.errorHandler(ser);
+			} else if (!handleKnownGlobalErrors(ser)) {
 				this.setState({ submitError: formatStructuredErrorResponse(ser) });
 			}
 		}

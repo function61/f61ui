@@ -1,3 +1,5 @@
+import { StructuredErrorResponse } from 'f61ui/types';
+
 export enum CrudNature {
 	update = 'update',
 	delete = 'delete',
@@ -19,6 +21,7 @@ export interface CommandSettings {
 	disambiguation?: string;
 	helpUrl?: string;
 	redirect?: (id: string) => string;
+	errorHandler?: (err: StructuredErrorResponse) => void;
 }
 
 export enum CommandFieldKind {
