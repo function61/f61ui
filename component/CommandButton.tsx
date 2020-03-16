@@ -33,7 +33,7 @@ export class CommandButton extends React.Component<CommandButtonProps, CommandBu
 		return (
 			<div style={{ display: 'inline-block' }}>
 				<a
-					className="btn btn-default"
+					className={'btn ' + btnClassFromCrudNature(this.props.command.crudNature)}
 					onClick={() => {
 						this.setState({ dialogOpen: true });
 					}}>
