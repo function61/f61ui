@@ -37,55 +37,24 @@ interface CommandValueCollection {
 }
 
 interface CommandPageletState {
-	values: CommandValueCollection;
 	additional_confirmation?: boolean;
-	validationStatuses: { [key: string]: boolean };
 	submitError: string;
-	fieldsThatWerePrefilled: { [key: string]: boolean };
 }
 
 export class CommandPagelet extends React.Component<CommandPageletProps, CommandPageletState> {
+	state: CommandPageletState = { submitError: '' };
+	cexec: CommandExecutor;
+	fieldsThatWerePrefilled: { [key: string]: boolean } = {};
+
 	constructor(props: CommandPageletProps) {
 		super(props);
 
-		const state: CommandPageletState = {
-			values: {},
-			validationStatuses: {},
-			submitError: '',
-			fieldsThatWerePrefilled: {},
-		};
+		this.cexec = new CommandExecutor(props.command);
 
-		// copy default values to values, because they are only updated on
-		// "onChange" event, and thus if user doesn't change them, they wouldn't get filled
-		this.props.command.fields.forEach((field) => {
-			switch (field.Kind) {
-				case CommandFieldKind.Integer:
-					state.values[field.Key] = null;
-					if (field.DefaultValueNumber !== undefined) {
-						state.values[field.Key] = field.DefaultValueNumber;
-						state.fieldsThatWerePrefilled[field.Key] = true;
-					}
-					break;
-				case CommandFieldKind.Password:
-				case CommandFieldKind.Text:
-				case CommandFieldKind.Date:
-				case CommandFieldKind.Multiline:
-					state.values[field.Key] = field.DefaultValueString;
-					if (field.DefaultValueString !== undefined) {
-						state.fieldsThatWerePrefilled[field.Key] = true;
-					}
-					break;
-				case CommandFieldKind.Checkbox:
-					state.values[field.Key] = field.DefaultValueBoolean;
-					break;
-				default:
-					unrecognizedValue(field.Kind);
-			}
-
-			state.validationStatuses[field.Key] = this.validate(field, state.values[field.Key]);
-		});
-
-		this.state = state;
+		// CommandExecutor only puts entries into "values" when have non-undefined DefaultValues
+		for (const key of Object.keys(this.cexec.values)) {
+			this.fieldsThatWerePrefilled[key] = true;
+		}
 
 		// so that initial validation state is used - otherwise only the
 		// first onchange would yield in current state
@@ -94,14 +63,14 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 	render() {
 		const shouldShow = (field: CommandField) =>
-			!field.HideIfDefaultValue || !(field.Key in this.state.fieldsThatWerePrefilled);
+			!field.HideIfDefaultValue || !(field.Key in this.fieldsThatWerePrefilled);
 
 		const fieldGroups = this.props.command.fields.filter(shouldShow).map((field, idx) => {
 			const shouldAutofocus = idx === 0;
 
 			const input = this.createInput(field, shouldAutofocus);
 
-			const valid = this.state.validationStatuses[field.Key];
+			const valid = this.cexec.validationStatuses[field.Key];
 
 			const validationFailedClass = valid ? '' : 'has-error';
 
@@ -163,9 +132,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 				<input type="submit" style={{ display: 'none' }} />
 
-				{this.state.submitError ? (
-					<DangerAlert>{this.state.submitError}</DangerAlert>
-				) : null}
+				{this.state.submitError && <DangerAlert>{this.state.submitError}</DangerAlert>}
 
 				{footer}
 			</form>
@@ -217,7 +184,12 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		this.setState({ submitError: '' });
 
 		try {
-			return await this.validateAndPost();
+			if (!this.isEverythingValid()) {
+				// shouldn't happen, because submit button is disabled when form is not valid
+				return Promise.reject(new Error('Invalid form data'));
+			}
+
+			return await this.cexec.execute();
 		} finally {
 			// whether fulfilled or rejected, return submitEnabled
 			// state back to what it should be
@@ -245,35 +217,6 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		);
 	}
 
-	private validate(field: CommandField, value: any): boolean {
-		if (field.Required && (value === undefined || value === null || value === '')) {
-			return false;
-		}
-
-		// strim with heading or trailing whitespace
-		// TODO: opting out of this mechanism?
-		if (typeof value === 'string' && value !== value.trim()) {
-			return false;
-		}
-
-		if (field.ValidationRegex && !new RegExp(field.ValidationRegex).test(value)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private async validateAndPost(): Promise<Response> {
-		if (!this.isEverythingValid()) {
-			return Promise.reject(new Error('Invalid form data'));
-		}
-
-		return await postJsonReturningVoid<CommandValueCollection>(
-			`/command/${this.props.command.key}`,
-			this.state.values,
-		);
-	}
-
 	// lets outside components who are dependent on our "submitEnabled" (= data valid)
 	// and "processing" states update their UIs
 	private broadcastChanges() {
@@ -289,6 +232,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		this.props.onSubmit();
 	}
 
+	// sames as CommandExecutor's validation but adds additional_confirmation
 	private isEverythingValid(): boolean {
 		if (
 			this.props.command.additional_confirmation !== undefined &&
@@ -297,20 +241,19 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 			return false;
 		}
 
-		return Object.keys(this.state.validationStatuses).every(
-			(key) => this.state.validationStatuses[key],
-		);
+		return this.cexec.allFieldsValid();
 	}
 
 	private updateFieldValue(key: string, value: any) {
 		const field = this.fieldByKey(key);
 
-		this.state.values[key] = value;
-		this.state.validationStatuses[field.Key] = this.validate(field, value);
+		this.cexec.values[key] = value;
+		this.cexec.validationStatuses[field.Key] = this.cexec.validate(field, value);
 
+		// force re-render
 		this.setState(this.state);
 
-		// TODO: this sets processing: false. this should not be
+		// FIXME: this sets processing: false. this should not be
 		// done while the server is actually processing
 		this.broadcastChanges();
 	}
@@ -346,7 +289,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						placeholder={field.Placeholder}
 						autoFocus={autoFocus}
 						required={field.Required}
-						value={this.state.values[field.Key]}
+						value={this.cexec.values[field.Key]}
 						onChange={this.onInputChange.bind(this)}
 					/>
 				);
@@ -359,7 +302,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						placeholder={field.Placeholder}
 						autoFocus={autoFocus}
 						required={field.Required}
-						value={this.state.values[field.Key]}
+						value={this.cexec.values[field.Key]}
 						onChange={this.onInputChange.bind(this)}
 					/>
 				);
@@ -383,7 +326,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						required={field.Required}
 						className="form-control"
 						rows={7}
-						value={this.state.values[field.Key]}
+						value={this.cexec.values[field.Key]}
 						onChange={this.onTextareaChange.bind(this)}
 					/>
 				);
@@ -396,7 +339,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						placeholder={field.Placeholder}
 						autoFocus={autoFocus}
 						required={field.Required}
-						value={this.state.values[field.Key]}
+						value={this.cexec.values[field.Key]}
 						onChange={this.onIntegerInputChange.bind(this)}
 					/>
 				);
@@ -407,7 +350,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						name={field.Key}
 						autoFocus={autoFocus}
 						className="form-control"
-						checked={this.state.values[field.Key]}
+						checked={this.cexec.values[field.Key]}
 						onChange={this.onCheckboxChange.bind(this)}
 					/>
 				);
@@ -424,5 +367,77 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		}
 
 		return matches[0];
+	}
+}
+
+// encapsulates command, its input/validation and submitting it to server
+export class CommandExecutor {
+	command: CommandDefinition;
+	values: CommandValueCollection = {};
+	validationStatuses: { [key: string]: boolean } = {};
+
+	constructor(command: CommandDefinition) {
+		this.command = command;
+
+		// copy default values to values, because they are only updated on
+		// "onChange" event, and thus if user doesn't change them, they wouldn't get filled
+		this.command.fields.forEach((field) => {
+			switch (field.Kind) {
+				case CommandFieldKind.Integer:
+					this.values[field.Key] = null;
+					if (field.DefaultValueNumber !== undefined) {
+						this.values[field.Key] = field.DefaultValueNumber;
+					}
+					break;
+				case CommandFieldKind.Password:
+				case CommandFieldKind.Text:
+				case CommandFieldKind.Date:
+				case CommandFieldKind.Multiline:
+					if (field.DefaultValueString !== undefined) {
+						this.values[field.Key] = field.DefaultValueString;
+					}
+					break;
+				case CommandFieldKind.Checkbox:
+					this.values[field.Key] = field.DefaultValueBoolean;
+					break;
+				default:
+					unrecognizedValue(field.Kind);
+			}
+
+			this.validationStatuses[field.Key] = this.validate(field, this.values[field.Key]);
+		});
+	}
+
+	async execute(): Promise<Response> {
+		if (!this.allFieldsValid()) {
+			throw new Error('Not all command fields are valid');
+		}
+
+		return await postJsonReturningVoid<CommandValueCollection>(
+			`/command/${this.command.key}`,
+			this.values,
+		);
+	}
+
+	allFieldsValid(): boolean {
+		return Object.keys(this.validationStatuses).every((key) => this.validationStatuses[key]);
+	}
+
+	validate(field: CommandField, value: any): boolean {
+		if (field.Required && (value === undefined || value === null || value === '')) {
+			return false;
+		}
+
+		// strim with heading or trailing whitespace
+		// TODO: opting out of this mechanism?
+		if (typeof value === 'string' && value !== value.trim()) {
+			return false;
+		}
+
+		if (field.ValidationRegex && !new RegExp(field.ValidationRegex).test(value)) {
+			return false;
+		}
+
+		return true;
 	}
 }
