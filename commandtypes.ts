@@ -31,6 +31,7 @@ export enum CommandFieldKind {
 	Checkbox = 'checkbox',
 	Integer = 'integer',
 	Date = 'date',
+	Any = 'any', // used for custom datatypes
 }
 
 export interface CommandField {
@@ -43,6 +44,7 @@ export interface CommandField {
 	DefaultValueString?: string;
 	DefaultValueBoolean?: boolean;
 	DefaultValueNumber?: number;
+	DefaultValueAny?: any;
 	Help?: string;
 	Placeholder?: string;
 	ValidationRegex: string;

@@ -70,6 +70,10 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 			const shouldAutofocus = idx === 0;
 
 			const input = this.createInput(field, shouldAutofocus);
+			if (input === null) {
+				// not visible component
+				return <div />;
+			}
 
 			const valid = this.cexec.validationStatuses[field.Key];
 
@@ -282,7 +286,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		this.updateFieldValue(e.currentTarget.name, e.currentTarget.value);
 	}
 
-	private createInput(field: CommandField, autoFocus: boolean): JSX.Element {
+	private createInput(field: CommandField, autoFocus: boolean): JSX.Element | null {
 		switch (field.Kind) {
 			case CommandFieldKind.Password:
 				return (
@@ -358,6 +362,8 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 						onChange={this.onCheckboxChange.bind(this)}
 					/>
 				);
+			case CommandFieldKind.Any:
+				return null;
 			default:
 				return unrecognizedValue(field.Kind);
 		}
@@ -387,6 +393,11 @@ export class CommandExecutor {
 		// "onChange" event, and thus if user doesn't change them, they wouldn't get filled
 		this.command.fields.forEach((field) => {
 			switch (field.Kind) {
+				case CommandFieldKind.Any:
+					if (field.DefaultValueAny !== undefined) {
+						this.values[field.Key] = field.DefaultValueAny;
+					}
+					break;
 				case CommandFieldKind.Integer:
 					this.values[field.Key] = null;
 					if (field.DefaultValueNumber !== undefined) {
