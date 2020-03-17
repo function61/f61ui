@@ -21,7 +21,7 @@ export interface CommandSettings {
 	disambiguation?: string;
 	helpUrl?: string;
 	redirect?: (id: string) => string;
-	errorHandler?: (err: StructuredErrorResponse) => void;
+	error?: (err: StructuredErrorResponse, values: CommandValueCollection) => boolean;
 }
 
 export enum CommandFieldKind {
@@ -46,4 +46,8 @@ export interface CommandField {
 	Help?: string;
 	Placeholder?: string;
 	ValidationRegex: string;
+}
+
+export interface CommandValueCollection {
+	[key: string]: any;
 }

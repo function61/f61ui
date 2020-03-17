@@ -1,5 +1,10 @@
 import { navigateTo, reloadCurrentPage } from 'f61ui/browserutils';
-import { CommandDefinition, CommandField, CommandFieldKind } from 'f61ui/commandtypes';
+import {
+	CommandDefinition,
+	CommandField,
+	CommandFieldKind,
+	CommandValueCollection,
+} from 'f61ui/commandtypes';
 import { DangerAlert, InfoAlert } from 'f61ui/component/alerts';
 import { Glyphicon } from 'f61ui/component/bootstrap';
 import { Info } from 'f61ui/component/info';
@@ -30,10 +35,6 @@ interface CommandPageletProps {
 	command: CommandDefinition;
 	onChanges: CommandChangesListener;
 	onSubmit: CommandSubmitListener;
-}
-
-interface CommandValueCollection {
-	[key: string]: any;
 }
 
 interface CommandPageletState {
@@ -165,8 +166,11 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		} catch (err) {
 			const ser = coerceToStructuredErrorResponse(err);
 
-			if (this.props.command.settings.errorHandler) {
-				this.props.command.settings.errorHandler(ser);
+			if (
+				this.props.command.settings.error &&
+				this.props.command.settings.error(ser, this.cexec.values)
+			) {
+				// no-op, error handler reported as having handled this
 			} else if (!handleKnownGlobalErrors(ser)) {
 				this.setState({ submitError: formatStructuredErrorResponse(ser) });
 			}
