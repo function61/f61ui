@@ -328,6 +328,12 @@ export class DefaultLabel extends React.Component<LabelProps, {}> {
 	}
 }
 
+export class PrimaryLabel extends React.Component<LabelProps, {}> {
+	render() {
+		return label(this.props, 'primary');
+	}
+}
+
 export class SuccessLabel extends React.Component<LabelProps, {}> {
 	render() {
 		return label(this.props, 'success');
@@ -348,7 +354,7 @@ export class DangerLabel extends React.Component<LabelProps, {}> {
 
 function label(
 	props: LabelProps,
-	visualStyle: 'default' | 'success' | 'warning' | 'danger',
+	visualStyle: 'primary' | 'default' | 'success' | 'warning' | 'danger',
 ): React.ReactNode {
 	return (
 		<span className={'label label-' + visualStyle} title={props.title}>
