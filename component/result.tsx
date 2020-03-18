@@ -11,9 +11,10 @@ import * as React from 'react';
 // wraps result data for UI friendly and typesafe way, acknowledging that the result can
 // be in these states:
 //
-//   a) loading
-//   b) fetched succcessfully
-//   c) errored fetching the value
+//   1) not started loading (don't display any UI)
+//   2) started loading
+//   3.a) fetched succcessfully
+//   3.b) errored fetching the value
 //
 export class Result<T> {
 	static unwrap2<T1, T2>(
@@ -80,6 +81,14 @@ export class Result<T> {
 		this.keepResult = true;
 
 		this.load(start);
+	}
+
+	// make us a "blank slate"
+	reset() {
+		this.result = undefined;
+		this.loading = false;
+		this.errorText = '';
+		this.keepResult = false;
 	}
 
 	private async loadInternal(start: () => Promise<T>) {
