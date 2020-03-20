@@ -3,19 +3,22 @@
 // (or document.location.assign or document.location.href) is not something we want to
 // repeat all around.
 
-// returns "#foo" if hash present
-// returns "" if no hash present
-export function getCurrentHash(): string {
-	return document.location!.hash;
+// returns location in in-app format (= relative URL)
+export function getCurrentLocation(): string {
+	const loc = document.location!;
+
+	return loc.pathname + loc.search;
 }
 
 // supports "#foo" (bare hash)
 // supports "/path" (relative)
 // supports "http://example.com/path" (absolute)
 export function navigateTo(to: string): void {
-	document.location!.assign(to);
+	// AppController will have to handle this, because if it's an in-app navigation, there
+	// are special things to do
+	window.dispatchEvent(new CustomEvent('f61navigate', { detail: to }));
 }
 
 export function reloadCurrentPage(): void {
-	document.location!.reload();
+	navigateTo(getCurrentLocation());
 }
