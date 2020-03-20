@@ -9,7 +9,7 @@ Use examples
 See any of these projects:
 
 - [function61/varasto](https://github.com/function61/varasto)
-- [function61/pi-security-module](https://github.com/function61/pi-security-module)
+- [function61/passitron](https://github.com/function61/passitron)
 
 
 Docs
