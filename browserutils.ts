@@ -22,3 +22,23 @@ export function navigateTo(to: string): void {
 export function reloadCurrentPage(): void {
 	navigateTo(getCurrentLocation());
 }
+
+export class LocalStorageItem {
+	private key: string;
+
+	constructor(key: string) {
+		this.key = key;
+	}
+
+	get(): string | null {
+		return localStorage.getItem(this.key);
+	}
+
+	set(value: string) {
+		localStorage.setItem(this.key, value);
+	}
+
+	remove() {
+		localStorage.removeItem(this.key);
+	}
+}
