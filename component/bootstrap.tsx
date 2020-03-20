@@ -362,3 +362,13 @@ function label(
 		</span>
 	);
 }
+
+interface MutedTextProps {
+	children: React.ReactNode;
+}
+
+export class MutedText extends React.Component<MutedTextProps, {}> {
+	render() {
+		return <span className="text-muted">{this.props.children}</span>;
+	}
+}
