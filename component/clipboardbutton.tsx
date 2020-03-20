@@ -1,21 +1,38 @@
 import { elToClipboard } from 'f61ui/clipboard';
+import { TextFadeOutAnimation } from 'f61ui/component/animations';
 import * as React from 'react';
 
 interface ClipboardButtonProps {
 	text: string;
 }
 
-export class ClipboardButton extends React.Component<ClipboardButtonProps, {}> {
+interface ClipboardButtonState {
+	animation?: React.ReactNode;
+}
+
+export class ClipboardButton extends React.Component<ClipboardButtonProps, ClipboardButtonState> {
+	state: ClipboardButtonState = {};
+
 	render() {
 		return (
-			<span
-				data-to-clipboard={this.props.text}
-				onClick={(e) => {
-					elToClipboard(e);
-				}}
-				className="fauxlink margin-left">
-				📋
-			</span>
+			<div>
+				<span
+					data-to-clipboard={this.props.text}
+					onClick={(e) => {
+						elToClipboard(e);
+
+						this.setState({
+							animation: TextFadeOutAnimation.make(
+								'Copied',
+								e.nativeEvent.target as HTMLElement | null,
+							),
+						});
+					}}
+					className="fauxlink margin-left">
+					📋
+				</span>
+				{this.state.animation}
+			</div>
 		);
 	}
 }

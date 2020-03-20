@@ -31,3 +31,25 @@ body {
 table.th-align-right th {
 	text-align: right;
 }
+
+.textFadeOutAnimation {
+	position: fixed;
+}
+
+.textFadeOutAnimation span {
+	position: absolute;
+	animation: textFadeOutAnimation 1s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes textFadeOutAnimation {
+	from {
+		top: 0px;
+		color: #337ab7; /* from bootstrap */
+		opacity: 1.0;
+	}
+	to {
+		top: -50px;
+		opacity: 0.0;
+	}
+}
