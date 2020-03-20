@@ -68,12 +68,30 @@ export async function httpMustBeOk(response: Response): Promise<void> {
 	}
 }
 
-export function makeQueryParams(path: string, queryParams: { [key: string]: string }): string {
-	const queryParamKvs = Object.keys(queryParams).map(
-		(key) => encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]),
+export function makeQueryParams(path: string, params: queryParams): string {
+	const queryParamKvs = Object.keys(params).map(
+		(key) => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]),
 	);
 
 	return queryParamKvs.length === 0 ? path : path + '?' + queryParamKvs.join('&');
+}
+
+export type queryParams = { [key: string]: string };
+
+export function parseQueryParams(queryParamsSerialized: string): queryParams {
+	// "foo=bar&quu=qux" => ["foo=bar", "quu=qux"]
+	const queryParPairs = queryParamsSerialized === '' ? [] : queryParamsSerialized.split('&');
+
+	return queryParPairs.reduce((acc, current) => {
+		const eqPos = current.indexOf('=');
+
+		const key = decodeURIComponent(current.substr(0, eqPos));
+		const value = decodeURIComponent(current.substr(eqPos + 1));
+
+		acc[key] = value;
+
+		return acc;
+	}, {} as queryParams);
 }
 
 function readCsrfToken(): string | null {
