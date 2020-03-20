@@ -25,10 +25,6 @@ export class CommandButton extends React.Component<CommandButtonProps, CommandBu
 
 	private cmdPagelet: CommandPagelet | null = null;
 
-	save() {
-		shouldAlwaysSucceed(this.cmdPagelet!.submitAndReloadOnSuccess());
-	}
-
 	render() {
 		return (
 			<div style={{ display: 'inline-block' }}>
@@ -40,26 +36,31 @@ export class CommandButton extends React.Component<CommandButtonProps, CommandBu
 					{this.props.command.title}
 				</a>
 
-				{this.state.dialogOpen
-					? mkCommandDialog(
-							this.props.command,
-							this.state.cmdState,
-							() => {
-								this.setState({ dialogOpen: false });
-							},
-							() => {
-								this.save();
-							},
-							(cmdState: CommandChangesArgs) => {
-								this.setState({ cmdState });
-							},
-							(el: CommandPagelet) => {
-								this.cmdPagelet = el;
-							},
-					  )
-					: null}
+				{this.state.dialogOpen &&
+					mkCommandDialog(
+						this.props.command,
+						this.state.cmdState,
+						() => {
+							this.setState({ dialogOpen: false });
+						},
+						() => {
+							shouldAlwaysSucceed(this.save());
+						},
+						(cmdState: CommandChangesArgs) => {
+							this.setState({ cmdState });
+						},
+						(el: CommandPagelet) => {
+							this.cmdPagelet = el;
+						},
+					)}
 			</div>
 		);
+	}
+
+	private async save() {
+		if (await this.cmdPagelet!.submitAndReloadOnSuccess()) {
+			this.setState({ dialogOpen: false });
+		}
 	}
 }
 
@@ -103,10 +104,6 @@ export class CommandIcon extends React.Component<CommandIconProps, CommandIconSt
 
 	private cmdPagelet: CommandPagelet | null = null;
 
-	save() {
-		shouldAlwaysSucceed(this.cmdPagelet!.submitAndReloadOnSuccess());
-	}
-
 	render() {
 		return (
 			<span
@@ -123,7 +120,7 @@ export class CommandIcon extends React.Component<CommandIconProps, CommandIconSt
 							this.setState({ dialogOpen: false });
 						},
 						() => {
-							this.save();
+							shouldAlwaysSucceed(this.save());
 						},
 						(cmdState: CommandChangesArgs) => {
 							this.setState({ cmdState });
@@ -134,6 +131,12 @@ export class CommandIcon extends React.Component<CommandIconProps, CommandIconSt
 					)}
 			</span>
 		);
+	}
+
+	private async save() {
+		if (await this.cmdPagelet!.submitAndReloadOnSuccess()) {
+			this.setState({ dialogOpen: false });
+		}
 	}
 }
 
@@ -151,10 +154,6 @@ export class CommandLink extends React.Component<CommandLinkProps, CommandLinkSt
 
 	private cmdPagelet: CommandPagelet | null = null;
 
-	save() {
-		shouldAlwaysSucceed(this.cmdPagelet!.submitAndReloadOnSuccess());
-	}
-
 	render() {
 		return (
 			<a
@@ -164,26 +163,31 @@ export class CommandLink extends React.Component<CommandLinkProps, CommandLinkSt
 				}}
 				key={this.props.command.key}>
 				{this.props.command.title}
-				{this.state.dialogOpen
-					? mkCommandDialog(
-							this.props.command,
-							this.state.cmdState,
-							() => {
-								this.setState({ dialogOpen: false });
-							},
-							() => {
-								this.save();
-							},
-							(cmdState: CommandChangesArgs) => {
-								this.setState({ cmdState });
-							},
-							(el: CommandPagelet) => {
-								this.cmdPagelet = el;
-							},
-					  )
-					: null}
+				{this.state.dialogOpen &&
+					mkCommandDialog(
+						this.props.command,
+						this.state.cmdState,
+						() => {
+							this.setState({ dialogOpen: false });
+						},
+						() => {
+							shouldAlwaysSucceed(this.save());
+						},
+						(cmdState: CommandChangesArgs) => {
+							this.setState({ cmdState });
+						},
+						(el: CommandPagelet) => {
+							this.cmdPagelet = el;
+						},
+					)}
 			</a>
 		);
+	}
+
+	private async save() {
+		if (await this.cmdPagelet!.submitAndReloadOnSuccess()) {
+			this.setState({ dialogOpen: false });
+		}
 	}
 }
 
