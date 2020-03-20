@@ -4,6 +4,7 @@ import * as React from 'react';
 
 interface SecretRevealProps {
 	secret: string;
+	noAutomaticClipboard?: boolean;
 }
 
 interface SecretRevealState {
@@ -28,7 +29,7 @@ export class SecretReveal extends React.Component<SecretRevealProps, SecretRevea
 					}}>
 					<Glyphicon icon={icon} />
 				</span>
-				<ClipboardButton text={this.props.secret} />
+				{!this.props.noAutomaticClipboard && <ClipboardButton text={this.props.secret} />}
 			</span>
 		);
 	}
