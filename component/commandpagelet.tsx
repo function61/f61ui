@@ -144,7 +144,10 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 		);
 	}
 
-	async submitAndReloadOnSuccess() {
+	// returns whether operation succeeded
+	// - true => close/hide possible UI the pagelet was on)
+	// - false => nop-op - error displaying is handled internally
+	async submitAndReloadOnSuccess(): Promise<boolean> {
 		try {
 			const response = await this.submit();
 			const redirectFn = this.props.command.settings.redirect;
@@ -167,6 +170,8 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 			} else {
 				reloadCurrentPage();
 			}
+
+			return true;
 		} catch (err) {
 			const ser = coerceToStructuredErrorResponse(err);
 
@@ -178,6 +183,8 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 			} else if (!handleKnownGlobalErrors(ser)) {
 				this.setState({ submitError: formatStructuredErrorResponse(ser) });
 			}
+
+			return false;
 		}
 	}
 
@@ -425,6 +432,8 @@ export class CommandExecutor {
 
 	async execute(): Promise<Response> {
 		if (!this.allFieldsValid()) {
+			// should happen very rarely, as UI is supposed to block submit buttons when
+			// data is invalid
 			throw new Error('Not all command fields are valid');
 		}
 
