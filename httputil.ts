@@ -17,8 +17,9 @@ export async function getJson<T>(url: string): Promise<T> {
 	return await response.json();
 }
 
-export function postJson<I, O>(url: string, body: I): Promise<O> {
-	return postJsonReturningVoid<I>(url, body).then((res) => res.json());
+export async function postJson<I, O>(url: string, body: I): Promise<O> {
+	const response = await postJsonReturningVoid<I>(url, body);
+	return await response.json();
 }
 
 export async function postJsonReturningVoid<T>(url: string, body: T): Promise<Response> {
