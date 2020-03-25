@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+// generic visual style applicable to many Bootstrap components
+type VisualStyle = 'primary' | 'default' | 'success' | 'warning' | 'danger';
+
 interface PanelProps {
 	heading?: React.ReactNode;
 	children?: React.ReactNode;
@@ -14,6 +17,24 @@ export class Panel extends React.Component<PanelProps, {}> {
 				{this.props.children && <div className="panel-body">{this.props.children}</div>}
 				{this.props.footer && <div className="panel-footer">{this.props.footer}</div>}
 			</div>
+		);
+	}
+}
+
+interface AnchorButtonProps {
+	href: string;
+	visualStyle?: VisualStyle;
+	children: React.ReactNode;
+}
+
+export class AnchorButton extends React.Component<AnchorButtonProps, {}> {
+	render() {
+		return (
+			<a
+				href={this.props.href}
+				className={'btn btn-' + (this.props.visualStyle || 'default')}>
+				{this.props.children}
+			</a>
 		);
 	}
 }
@@ -352,10 +373,7 @@ export class DangerLabel extends React.Component<LabelProps, {}> {
 	}
 }
 
-function label(
-	props: LabelProps,
-	visualStyle: 'primary' | 'default' | 'success' | 'warning' | 'danger',
-): React.ReactNode {
+function label(props: LabelProps, visualStyle: VisualStyle): React.ReactNode {
 	return (
 		<span className={'label label-' + visualStyle} title={props.title}>
 			{props.children}
