@@ -15,7 +15,7 @@ export class ClipboardButton extends React.Component<ClipboardButtonProps, Clipb
 
 	render() {
 		return (
-			<div>
+			<span>
 				<span
 					data-to-clipboard={this.props.text}
 					onClick={(e) => {
@@ -32,7 +32,7 @@ export class ClipboardButton extends React.Component<ClipboardButtonProps, Clipb
 					📋
 				</span>
 				{this.state.animation}
-			</div>
+			</span>
 		);
 	}
 }
