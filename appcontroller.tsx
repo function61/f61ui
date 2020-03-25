@@ -37,15 +37,20 @@ export interface AppControllerState {
 export class AppController extends React.Component<AppControllerProps, AppControllerState> {
 	state: AppControllerState = { relativeUrl: getCurrentLocation() };
 
-	render() {
-		// handles 404s internally
-		return this.props.router.handle(this.state.relativeUrl);
-	}
+	constructor(props: AppControllerProps) {
+		super(props);
 
-	componentDidMount() {
+		// can't do these in componentDidMount() because router's rendered content would
+		// already have been rendered (via our render()) which in some cases emit "f61navigate"
+		// events which we wouldn't catch
 		window.addEventListener('f61navigate', this.f61navigate);
 		window.addEventListener('popstate', this.popstate);
 		window.addEventListener('click', this.windowClick);
+	}
+
+	render() {
+		// handles 404s internally
+		return this.props.router.handle(this.state.relativeUrl);
 	}
 
 	componentWillUnmount() {
