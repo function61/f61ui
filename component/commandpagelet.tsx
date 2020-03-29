@@ -147,29 +147,22 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 	// returns whether operation succeeded
 	// - true => close/hide possible UI the pagelet was on)
 	// - false => nop-op - error displaying is handled internally
-	async submitAndReloadOnSuccess(): Promise<boolean> {
+	async submitAndRedirectOnSuccess(): Promise<boolean> {
+		// disable submit button while server is processing
+		this.props.onChanges({
+			processing: true,
+			submitEnabled: false,
+		});
+
+		this.setState({ submitError: '' });
+
 		try {
-			const response = await this.submit();
-			const redirectFn = this.props.command.settings.redirect;
-
-			if (redirectFn) {
-				const recordId = response.headers.get('x-created-record-id'); // case insensitive
-
-				if (!recordId) {
-					throw new Error(
-						`command has redirectFn specified, but server did not provide x-created-record-id`,
-					);
-				}
-
-				const redirectTarget = redirectFn(recordId);
-
-				// redirectFn can return '' to signify it handled redirection itself
-				if (redirectTarget) {
-					navigateTo(redirectTarget);
-				}
-			} else {
-				reloadCurrentPage();
+			if (!this.isEverythingValid()) {
+				// shouldn't happen, because submit button is disabled when form is not valid
+				return Promise.reject(new Error('Invalid form data'));
 			}
+
+			await this.cexec.executeAndRedirectOnSuccess();
 
 			return true;
 		} catch (err) {
@@ -185,29 +178,9 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 			}
 
 			return false;
-		}
-	}
-
-	// official submit, which should trigger validation
-	private async submit(): Promise<Response> {
-		// disable submit button while server is processing
-		this.props.onChanges({
-			processing: true,
-			submitEnabled: false,
-		});
-
-		this.setState({ submitError: '' });
-
-		try {
-			if (!this.isEverythingValid()) {
-				// shouldn't happen, because submit button is disabled when form is not valid
-				return Promise.reject(new Error('Invalid form data'));
-			}
-
-			return await this.cexec.execute();
 		} finally {
-			// whether fulfilled or rejected, return submitEnabled
-			// state back to what it should be
+			// whether fulfilled or rejected, return back to
+			// {processing: false, submitEnabled: true}
 			this.broadcastChanges();
 		}
 	}
@@ -441,6 +414,31 @@ export class CommandExecutor {
 			`/command/${this.command.key}`,
 			this.values,
 		);
+	}
+
+	async executeAndRedirectOnSuccess(): Promise<void> {
+		const response = await this.execute();
+
+		const redirectFn = this.command.settings.redirect;
+
+		if (redirectFn) {
+			const recordId = response.headers.get('x-created-record-id'); // case insensitive
+
+			if (!recordId) {
+				throw new Error(
+					`command has redirectFn specified, but server did not provide x-created-record-id`,
+				);
+			}
+
+			const redirectTarget = redirectFn(recordId);
+
+			// redirectFn can return '' to signify it handled redirection itself
+			if (redirectTarget) {
+				navigateTo(redirectTarget);
+			}
+		} else {
+			reloadCurrentPage();
+		}
 	}
 
 	allFieldsValid(): boolean {

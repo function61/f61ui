@@ -58,7 +58,7 @@ export class CommandButton extends React.Component<CommandButtonProps, CommandBu
 	}
 
 	private async save() {
-		if (await this.cmdPagelet!.submitAndReloadOnSuccess()) {
+		if (await this.cmdPagelet!.submitAndRedirectOnSuccess()) {
 			this.setState({ dialogOpen: false });
 		}
 	}
@@ -134,7 +134,7 @@ export class CommandIcon extends React.Component<CommandIconProps, CommandIconSt
 	}
 
 	private async save() {
-		if (await this.cmdPagelet!.submitAndReloadOnSuccess()) {
+		if (await this.cmdPagelet!.submitAndRedirectOnSuccess()) {
 			this.setState({ dialogOpen: false });
 		}
 	}
@@ -185,7 +185,7 @@ export class CommandLink extends React.Component<CommandLinkProps, CommandLinkSt
 	}
 
 	private async save() {
-		if (await this.cmdPagelet!.submitAndReloadOnSuccess()) {
+		if (await this.cmdPagelet!.submitAndRedirectOnSuccess()) {
 			this.setState({ dialogOpen: false });
 		}
 	}
@@ -241,7 +241,7 @@ export class CommandInlineForm extends React.Component<
 	}
 
 	save() {
-		shouldAlwaysSucceed(this.cmdPagelet!.submitAndReloadOnSuccess());
+		shouldAlwaysSucceed(this.cmdPagelet!.submitAndRedirectOnSuccess());
 	}
 }
 
