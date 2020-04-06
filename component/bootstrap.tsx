@@ -1,5 +1,9 @@
 import * as React from 'react';
 
+export const tableClassStripedHover = 'table table-striped table-hover';
+
+export const tableClassStripedHoverBordered = 'table table-striped table-hover table-bordered';
+
 // generic visual style applicable to many Bootstrap components
 type VisualStyle = 'primary' | 'default' | 'success' | 'warning' | 'danger';
 
