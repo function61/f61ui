@@ -67,12 +67,19 @@ export class Well extends React.Component<{}, {}> {
 interface GlyphiconProps {
 	icon: GlyphiconIcon;
 	title?: string;
+	click?: () => void; // prefer to use URLs for view changes wherever you can!
 }
 
 export class Glyphicon extends React.Component<GlyphiconProps, {}> {
 	render() {
 		return (
-			<span className={'glyphicon glyphicon-' + this.props.icon} title={this.props.title} />
+			<span
+				className={
+					'glyphicon glyphicon-' + this.props.icon + (this.props.click ? ' fauxlink' : '')
+				}
+				title={this.props.title}
+				onClick={this.props.click}
+			/>
 		);
 	}
 }
