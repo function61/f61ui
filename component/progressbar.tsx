@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-type colourType = 'info' | 'success' | 'warning' | 'error';
+type colourType = 'info' | 'success' | 'warning' | 'danger';
 
 interface ProgressBarProps {
 	progress: number; // 0-100 [%]
