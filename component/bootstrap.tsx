@@ -401,3 +401,39 @@ export class MutedText extends React.Component<MutedTextProps, {}> {
 		return <span className="text-muted">{this.props.children}</span>;
 	}
 }
+
+interface CollapsePanelProps {
+	heading: string;
+	children: React.ReactNode;
+}
+
+interface CollapsePanelState {
+	open: boolean;
+}
+
+export class CollapsePanel extends React.Component<CollapsePanelProps, CollapsePanelState> {
+	state: CollapsePanelState = { open: false };
+
+	render() {
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					<span
+						className="btn btn-default"
+						onClick={() => {
+							this.toggle();
+						}}>
+						<Glyphicon icon={this.state.open ? 'chevron-up' : 'chevron-down'} />
+					</span>
+					&nbsp;
+					{this.props.heading}
+				</div>
+				{this.state.open && <div className="panel-body">{this.props.children}</div>}
+			</div>
+		);
+	}
+
+	private toggle() {
+		this.setState({ open: !this.state.open });
+	}
+}
