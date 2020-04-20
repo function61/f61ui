@@ -5,7 +5,8 @@ export const tableClassStripedHover = 'table table-striped table-hover';
 export const tableClassStripedHoverBordered = 'table table-striped table-hover table-bordered';
 
 // generic visual style applicable to many Bootstrap components
-type VisualStyle = 'primary' | 'default' | 'success' | 'warning' | 'danger';
+// (some components take subset this)
+type VisualStyle = 'primary' | 'default' | 'success' | 'info' | 'warning' | 'danger';
 
 interface PanelProps {
 	heading?: React.ReactNode;
@@ -404,6 +405,7 @@ export class MutedText extends React.Component<MutedTextProps, {}> {
 
 interface CollapsePanelProps {
 	heading: string;
+	visualStyle?: VisualStyle;
 	children: React.ReactNode;
 }
 
@@ -415,11 +417,13 @@ export class CollapsePanel extends React.Component<CollapsePanelProps, CollapseP
 	state: CollapsePanelState = { open: false };
 
 	render() {
+		const visualStyle: VisualStyle = this.props.visualStyle || 'default';
+
 		return (
-			<div className="panel panel-default">
+			<div className={'panel panel-' + visualStyle}>
 				<div className="panel-heading">
 					<span
-						className="btn btn-default"
+						className={'btn btn-' + visualStyle}
 						onClick={() => {
 							this.toggle();
 						}}>
