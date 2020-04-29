@@ -268,6 +268,17 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 	private createInput(field: CommandField, autoFocus: boolean): JSX.Element | null {
 		switch (field.Kind) {
+			case CommandFieldKind.CustomString:
+			case CommandFieldKind.CustomInteger:
+				const factory = this.props.command.customFields![field.Key];
+				return factory(
+					field,
+					this.cexec.values[field.Key],
+					(val: any) => {
+						this.updateFieldValue(field.Key, val);
+					},
+					autoFocus,
+				);
 			case CommandFieldKind.Password:
 				return (
 					<input
@@ -378,6 +389,7 @@ export class CommandExecutor {
 						this.values[field.Key] = field.DefaultValueAny;
 					}
 					break;
+				case CommandFieldKind.CustomInteger:
 				case CommandFieldKind.Integer:
 					this.values[field.Key] = null;
 					if (field.DefaultValueNumber !== undefined) {
@@ -387,6 +399,7 @@ export class CommandExecutor {
 				case CommandFieldKind.Password:
 				case CommandFieldKind.Text:
 				case CommandFieldKind.Date:
+				case CommandFieldKind.CustomString:
 				case CommandFieldKind.Multiline:
 					if (field.DefaultValueString !== undefined) {
 						this.values[field.Key] = field.DefaultValueString;
