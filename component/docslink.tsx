@@ -14,7 +14,7 @@ export class DocsLink extends React.Component<DocsLinkProps, {}> {
 				title={this.props.title || 'View documentation'}
 				target="_blank">
 				<Glyphicon icon="question-sign" />
-				{this.props.title || ''}
+				{this.props.title ? ' ' + this.props.title : ''}
 			</a>
 		);
 	}
