@@ -12,6 +12,11 @@ export function defaultErrorHandler(err: Error | StructuredErrorResponse) {
 }
 
 export function formatStructuredErrorResponse(ser: StructuredErrorResponse): string {
+	if (ser.error_code === 'generic') {
+		// means pretty much "unknown", so no sense in showing it
+		return ser.error_description;
+	}
+
 	return `${ser.error_code}: ${ser.error_description}`;
 }
 
