@@ -406,6 +406,7 @@ export class MutedText extends React.Component<MutedTextProps, {}> {
 interface CollapsePanelProps {
 	heading: string;
 	visualStyle?: VisualStyle;
+	openInitially?: boolean;
 	children: React.ReactNode;
 }
 
@@ -414,7 +415,7 @@ interface CollapsePanelState {
 }
 
 export class CollapsePanel extends React.Component<CollapsePanelProps, CollapsePanelState> {
-	state: CollapsePanelState = { open: false };
+	state: CollapsePanelState = { open: !!this.props.openInitially };
 
 	render() {
 		const visualStyle: VisualStyle = this.props.visualStyle || 'default';
