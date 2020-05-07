@@ -29,7 +29,11 @@ export class SecretReveal extends React.Component<SecretRevealProps, SecretRevea
 					}}>
 					<Glyphicon icon={icon} />
 				</span>
-				{!this.props.noAutomaticClipboard && <ClipboardButton text={this.props.secret} />}
+				{!this.props.noAutomaticClipboard && (
+					<span className="margin-left">
+						<ClipboardButton text={this.props.secret} />
+					</span>
+				)}
 			</span>
 		);
 	}

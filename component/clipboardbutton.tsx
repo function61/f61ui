@@ -28,7 +28,7 @@ export class ClipboardButton extends React.Component<ClipboardButtonProps, Clipb
 							),
 						});
 					}}
-					className="fauxlink margin-left">
+					className="fauxlink">
 					📋
 				</span>
 				{this.state.animation}
