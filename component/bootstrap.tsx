@@ -12,6 +12,7 @@ interface PanelProps {
 	heading?: React.ReactNode;
 	children?: React.ReactNode;
 	footer?: React.ReactNode;
+	bodyMarginless?: boolean;
 }
 
 export class Panel extends React.Component<PanelProps, {}> {
@@ -19,7 +20,11 @@ export class Panel extends React.Component<PanelProps, {}> {
 		return (
 			<div className="panel panel-default">
 				{this.props.heading && <div className="panel-heading">{this.props.heading}</div>}
-				{this.props.children && <div className="panel-body">{this.props.children}</div>}
+				{this.props.children && (
+					<div className={this.props.bodyMarginless ? '' : 'panel-body'}>
+						{this.props.children}
+					</div>
+				)}
 				{this.props.footer && <div className="panel-footer">{this.props.footer}</div>}
 			</div>
 		);
