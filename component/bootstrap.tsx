@@ -447,3 +447,36 @@ export class CollapsePanel extends React.Component<CollapsePanelProps, CollapseP
 		this.setState({ open: !this.state.open });
 	}
 }
+
+// this was born because you can't easily make a JSX element and later append children to it,
+// so we've to know all cells of <div class="row"></div> before we make it
+export class GridRowMaker {
+	private rows: JSX.Element[] = [];
+	private cells: JSX.Element[] = [];
+	private columns: number;
+
+	constructor(columns: number) {
+		this.columns = columns;
+	}
+
+	push(cell: JSX.Element) {
+		this.cells.push(<div className={'col-md-' + 12 / this.columns}>{cell}</div>);
+
+		if (this.cells.length === this.columns) {
+			this.emitRow();
+		}
+	}
+
+	finalize(): JSX.Element[] {
+		this.emitRow();
+
+		return this.rows;
+	}
+
+	private emitRow() {
+		if (this.cells.length > 0) {
+			this.rows.push(<div className="row">{this.cells}</div>);
+		}
+		this.cells = [];
+	}
+}
