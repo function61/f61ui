@@ -146,7 +146,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 	// returns whether operation succeeded
 	// - true => close/hide possible UI the pagelet was on)
-	// - false => nop-op - error displaying is handled internally
+	// - false => no-op (error displaying was handled internally)
 	async submitAndRedirectOnSuccess(): Promise<boolean> {
 		// disable submit button while server is processing
 		this.props.onChanges({
@@ -162,9 +162,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 				return Promise.reject(new Error('Invalid form data'));
 			}
 
-			await this.cexec.executeAndRedirectOnSuccess();
-
-			return true;
+			return await this.cexec.executeAndRedirectOnSuccess();
 		} catch (err) {
 			const ser = coerceToStructuredErrorResponse(err);
 
@@ -429,28 +427,35 @@ export class CommandExecutor {
 		);
 	}
 
-	async executeAndRedirectOnSuccess(): Promise<void> {
+	// returns true if form should be closed (same semantics as
+	// submitAndRedirectOnSuccess())
+	async executeAndRedirectOnSuccess(): Promise<boolean> {
 		const response = await this.execute();
 
 		const redirectFn = this.command.settings.redirect;
 
-		if (redirectFn) {
-			const recordId = response.headers.get('x-created-record-id'); // case insensitive
-
-			if (!recordId) {
-				throw new Error(
-					`command has redirectFn specified, but server did not provide x-created-record-id`,
-				);
-			}
-
-			const redirectTarget = redirectFn(recordId);
-
-			// redirectFn can return '' to signify it handled redirection itself
-			if (redirectTarget) {
-				navigateTo(redirectTarget);
-			}
-		} else {
+		if (!redirectFn) {
 			reloadCurrentPage();
+			return true;
+		}
+
+		const recordId = response.headers.get('x-created-record-id'); // case insensitive
+
+		if (!recordId) {
+			throw new Error(
+				`command has redirectFn specified, but server did not provide x-created-record-id`,
+			);
+		}
+
+		const redirectTarget = redirectFn(recordId);
+
+		// redirectFn can return '' to signify that there was error-like condition,
+		// in which case the form will not be closed
+		if (redirectTarget) {
+			navigateTo(redirectTarget);
+			return true;
+		} else {
+			return false;
 		}
 	}
 

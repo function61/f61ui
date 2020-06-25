@@ -23,6 +23,7 @@ export interface CommandSettings {
 	// so there's no hesitation of "did I pick the right row for this action?"
 	disambiguation?: string;
 	helpUrl?: string;
+	// if returns empty string, considered as error and form is not closed
 	redirect?: (id: string) => string;
 	error?: (err: StructuredErrorResponse, values: CommandValueCollection) => boolean;
 }
