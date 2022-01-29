@@ -409,7 +409,7 @@ export class MutedText extends React.Component<MutedTextProps, {}> {
 }
 
 interface CollapsePanelProps {
-	heading: string;
+	heading: React.ReactNode;
 	visualStyle?: VisualStyle;
 	openInitially?: boolean;
 	children: React.ReactNode;
