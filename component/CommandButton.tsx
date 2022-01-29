@@ -13,6 +13,7 @@ import * as React from 'react';
 
 interface CommandButtonProps {
 	command: CommandDefinition;
+	disabled?: boolean;
 }
 
 interface CommandButtonState {
@@ -26,10 +27,16 @@ export class CommandButton extends React.Component<CommandButtonProps, CommandBu
 	private cmdPagelet: CommandPagelet | null = null;
 
 	render() {
+		const maybeDisabledClass = this.props.disabled ? ' disabled' : '';
+
 		return (
 			<div style={{ display: 'inline-block' }}>
 				<a
-					className={'btn ' + btnClassFromCrudNature(this.props.command.crudNature)}
+					className={
+						'btn ' +
+						btnClassFromCrudNature(this.props.command.crudNature) +
+						maybeDisabledClass
+					}
 					onClick={() => {
 						this.setState({ dialogOpen: true });
 					}}>
