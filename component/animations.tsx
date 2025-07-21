@@ -8,19 +8,6 @@ interface TextFadeOutAnimationProps {
 }
 
 export class TextFadeOutAnimation extends React.Component<TextFadeOutAnimationProps, {}> {
-	render() {
-		return (
-			<div
-				className="textFadeOutAnimation"
-				style={{
-					left: this.props.offsetLeft + 'px',
-					top: this.props.offsetTop + 'px',
-				}}>
-				<span>{this.props.label}</span>
-			</div>
-		);
-	}
-
 	static make(label: string, el: HTMLElement | null): React.ReactNode {
 		if (!el) {
 			return null;
@@ -37,6 +24,19 @@ export class TextFadeOutAnimation extends React.Component<TextFadeOutAnimationPr
 				offsetLeft={bounds.x}
 				offsetTop={bounds.y}
 			/>
+		);
+	}
+
+	render() {
+		return (
+			<div
+				className="textFadeOutAnimation"
+				style={{
+					left: this.props.offsetLeft + 'px',
+					top: this.props.offsetTop + 'px',
+				}}>
+				<span>{this.props.label}</span>
+			</div>
 		);
 	}
 }
