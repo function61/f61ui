@@ -69,7 +69,7 @@ export async function httpMustBeOk(response: Response): Promise<void> {
 	}
 }
 
-export function makeQueryParams(path: string, params: queryParams): string {
+export function makeQueryParams(path: string, params: QueryParams): string {
 	const queryParamKvs = Object.keys(params).map(
 		(key) => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]),
 	);
@@ -77,9 +77,11 @@ export function makeQueryParams(path: string, params: queryParams): string {
 	return queryParamKvs.length === 0 ? path : path + '?' + queryParamKvs.join('&');
 }
 
-export type queryParams = { [key: string]: string };
+export interface QueryParams {
+	[key: string]: string;
+}
 
-export function parseQueryParams(queryParamsSerialized: string): queryParams {
+export function parseQueryParams(queryParamsSerialized: string): QueryParams {
 	// "foo=bar&quu=qux" => ["foo=bar", "quu=qux"]
 	const queryParPairs = queryParamsSerialized === '' ? [] : queryParamsSerialized.split('&');
 
@@ -92,7 +94,7 @@ export function parseQueryParams(queryParamsSerialized: string): queryParams {
 		acc[key] = value;
 
 		return acc;
-	}, {} as queryParams);
+	}, {} as QueryParams);
 }
 
 function readCsrfToken(): string | null {
