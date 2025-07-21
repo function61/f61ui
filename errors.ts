@@ -48,3 +48,12 @@ export function isStructuredErrorResponse(
 ): err is StructuredErrorResponse {
 	return typeof err === 'object' && 'error_code' in (err as StructuredErrorResponse);
 }
+
+// not all caught errors inherit from `Error` (which would have `.toString()` available which we likely need).
+// most likely they do, but this function "coerces" everything to `Error` even if it means losing
+// original object in entirety (because it's just unlikely anyway).
+export function asError(possiblyError: any): Error {
+	return possiblyError instanceof Error
+		? possiblyError
+		: new Error('given variable not instance of Error');
+}

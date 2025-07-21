@@ -1,6 +1,7 @@
 import { DangerAlert } from 'f61ui/component/alerts';
 import { Loading } from 'f61ui/component/loading';
 import {
+	asError,
 	coerceToStructuredErrorResponse,
 	formatStructuredErrorResponse,
 	handleKnownGlobalErrors,
@@ -118,7 +119,7 @@ export class Result<T> {
 			// be extra explicit to the user that this is not the new content
 			this.result = undefined;
 
-			const ser = coerceToStructuredErrorResponse(err);
+			const ser = coerceToStructuredErrorResponse(asError(err));
 
 			handleKnownGlobalErrors(ser);
 

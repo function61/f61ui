@@ -9,6 +9,7 @@ import { DangerAlert, InfoAlert } from 'f61ui/component/alerts';
 import { Glyphicon } from 'f61ui/component/bootstrap';
 import { Info } from 'f61ui/component/info';
 import {
+	asError,
 	coerceToStructuredErrorResponse,
 	formatStructuredErrorResponse,
 	handleKnownGlobalErrors,
@@ -164,7 +165,7 @@ export class CommandPagelet extends React.Component<CommandPageletProps, Command
 
 			return await this.cexec.executeAndRedirectOnSuccess();
 		} catch (err) {
-			const ser = coerceToStructuredErrorResponse(err);
+			const ser = coerceToStructuredErrorResponse(asError(err));
 
 			if (
 				this.props.command.settings.error &&

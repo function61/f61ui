@@ -1,3 +1,4 @@
+import { asError } from 'f61ui/errors';
 import { StructuredErrorResponse } from 'f61ui/types';
 
 export async function getJson<T>(url: string): Promise<T> {
@@ -58,7 +59,7 @@ export async function httpMustBeOk(response: Response): Promise<void> {
 		responseBody = await response.text();
 	} catch (err) {
 		throw new Error(
-			'HTTP response failure. Also, error fetching response body: ' + err.toString(),
+			'HTTP response failure. Also, error fetching response body: ' + asError(err).toString(),
 		);
 	}
 
