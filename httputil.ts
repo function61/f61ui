@@ -89,13 +89,18 @@ export function parseQueryParams(queryParamsSerialized: string): QueryParams {
 	return queryParPairs.reduce((acc, current) => {
 		const eqPos = current.indexOf('=');
 
-		const key = decodeURIComponent(current.substr(0, eqPos));
-		const value = decodeURIComponent(current.substr(eqPos + 1));
+		const key = decodeQueryParam(current.substr(0, eqPos));
+		const value = decodeQueryParam(current.substr(eqPos + 1));
 
 		acc[key] = value;
 
 		return acc;
 	}, {} as QueryParams);
+}
+
+function decodeQueryParam(p: string): string {
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURIComponent#decoding_query_parameters_from_a_url
+	return decodeURIComponent(p.replace(/\+/g, ' '));
 }
 
 function readCsrfToken(): string | null {
