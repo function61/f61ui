@@ -15,6 +15,11 @@ export class SecretReveal extends React.Component<SecretRevealProps, SecretRevea
 	state = { visible: false };
 
 	render() {
+		// it looks stupid if we show the password mask in UI and after clicking the "show password" there ain't anything there.
+		if (this.props.secret.length === 0) {
+			return <span />;
+		}
+
 		const secretVisibleOrNot = this.state.visible ? this.props.secret : '********';
 
 		const icon = this.state.visible ? 'eye-close' : 'eye-open';
