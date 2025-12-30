@@ -63,6 +63,7 @@ export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {
 		);
 	}
 
+	// the world deserves a bit more light
 	private enjoyYourDayGreeting() {
 		const dayOfWeek = [
 			'Sunday',
@@ -76,7 +77,7 @@ export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {
 
 		return (
 			<span>
-				<a href="https://function61.com/api/happy" target="_blank">
+				<a href="https://function61.com/happy" target="_blank">
 					Enjoy
 				</a>{' '}
 				your {dayOfWeek}! :)
