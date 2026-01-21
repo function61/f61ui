@@ -1,4 +1,5 @@
-import { Glyphicon } from 'f61ui/component/bootstrap';
+import EyeFill from 'bootstrap-icons/icons/eye-fill.svg';
+import EyeSlashFill from 'bootstrap-icons/icons/eye-slash-fill.svg';
 import { ClipboardButton } from 'f61ui/component/clipboardbutton';
 import * as React from 'react';
 
@@ -22,8 +23,6 @@ export class SecretReveal extends React.Component<SecretRevealProps, SecretRevea
 
 		const secretVisibleOrNot = this.state.visible ? this.props.secret : '********';
 
-		const icon = this.state.visible ? 'eye-close' : 'eye-open';
-
 		return (
 			<span>
 				{secretVisibleOrNot}
@@ -32,7 +31,7 @@ export class SecretReveal extends React.Component<SecretRevealProps, SecretRevea
 					onClick={() => {
 						this.setState({ visible: !this.state.visible });
 					}}>
-					<Glyphicon icon={icon} />
+					{this.state.visible ? <EyeSlashFill /> : <EyeFill />}
 				</span>
 				{!this.props.noAutomaticClipboard && (
 					<span className="margin-left">

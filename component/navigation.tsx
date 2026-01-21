@@ -1,22 +1,21 @@
-import { Glyphicon, GlyphiconIcon } from 'f61ui/component/bootstrap';
 import * as React from 'react';
 
 export interface NavLink {
 	url: string;
 	title: string;
-	glyphicon?: GlyphiconIcon;
+	icon?: React.ReactNode;
 	active: boolean;
 }
 
 export function renderNavLink(link: NavLink): React.ReactNode {
-	const activeOrNot = link.active ? 'active' : '';
+	const activeOrNot = link.active ? 'active nav-underline' : '';
 
 	return (
-		<li className={activeOrNot} key={link.url}>
-			<a href={link.url}>
-				{link.glyphicon && <Glyphicon icon={link.glyphicon} />}
+		<li className={'nav-item'} key={link.url}>
+			<a className={'nav-link ' + activeOrNot} href={link.url}>
+				{link.icon && link.icon}
 				&nbsp;
-				<span className={link.glyphicon ? 'margin-left' : ''}>{link.title}</span>
+				<span className={link.icon ? 'margin-left' : ''}>{link.title}</span>
 			</a>
 		</li>
 	);

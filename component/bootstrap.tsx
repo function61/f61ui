@@ -1,3 +1,5 @@
+import ChevronDown from 'bootstrap-icons/icons/chevron-down.svg';
+import ChevronUp from 'bootstrap-icons/icons/chevron-up.svg';
 import * as React from 'react';
 
 export const tableClassStripedHover = 'table table-striped table-hover';
@@ -18,10 +20,10 @@ interface PanelProps {
 export class Panel extends React.Component<PanelProps, {}> {
 	render() {
 		return (
-			<div className="panel panel-default">
-				{this.props.heading && <div className="panel-heading">{this.props.heading}</div>}
+			<div className="card mb-3">
+				{this.props.heading && <div className="card-header">{this.props.heading}</div>}
 				{this.props.children && (
-					<div className={this.props.bodyMarginless ? '' : 'panel-body'}>
+					<div className={this.props.bodyMarginless ? '' : 'card-body'}>
 						{this.props.children}
 					</div>
 				)}
@@ -57,7 +59,7 @@ interface ButtonProps {
 export class Button extends React.Component<ButtonProps, {}> {
 	render() {
 		return (
-			<span className="btn btn-default" onClick={this.props.click}>
+			<span className="btn btn-secondary" onClick={this.props.click}>
 				{this.props.label}
 			</span>
 		);
@@ -66,7 +68,11 @@ export class Button extends React.Component<ButtonProps, {}> {
 
 export class Well extends React.Component<{}, {}> {
 	render() {
-		return <div className="well">{this.props.children}</div>;
+		return (
+			<div className="card mb-3">
+				<div className="card-body">{this.props.children}</div>
+			</div>
+		);
 	}
 }
 
@@ -362,37 +368,37 @@ interface LabelProps {
 
 export class DefaultLabel extends React.Component<LabelProps, {}> {
 	render() {
-		return label(this.props, 'default');
+		return badge(this.props, 'text-bg-secondary');
 	}
 }
 
 export class PrimaryLabel extends React.Component<LabelProps, {}> {
 	render() {
-		return label(this.props, 'primary');
+		return badge(this.props, 'text-bg-primary');
 	}
 }
 
 export class SuccessLabel extends React.Component<LabelProps, {}> {
 	render() {
-		return label(this.props, 'success');
+		return badge(this.props, 'text-bg-success');
 	}
 }
 
 export class WarningLabel extends React.Component<LabelProps, {}> {
 	render() {
-		return label(this.props, 'warning');
+		return badge(this.props, 'text-bg-warning');
 	}
 }
 
 export class DangerLabel extends React.Component<LabelProps, {}> {
 	render() {
-		return label(this.props, 'danger');
+		return badge(this.props, 'text-bg-danger');
 	}
 }
 
-function label(props: LabelProps, visualStyle: VisualStyle): React.ReactNode {
+function badge(props: LabelProps, visualStyle: string): React.ReactNode {
 	return (
-		<span className={'label label-' + visualStyle} title={props.title}>
+		<span className={'badge ' + visualStyle} title={props.title}>
 			{props.children}
 		</span>
 	);
@@ -426,19 +432,19 @@ export class CollapsePanel extends React.Component<CollapsePanelProps, CollapseP
 		const visualStyle: VisualStyle = this.props.visualStyle || 'default';
 
 		return (
-			<div className={'panel panel-' + visualStyle}>
-				<div className="panel-heading">
+			<div className={'card card-' + visualStyle}>
+				<div className="card-heading">
 					<span
 						className={'btn btn-' + visualStyle}
 						onClick={() => {
 							this.toggle();
 						}}>
-						<Glyphicon icon={this.state.open ? 'chevron-up' : 'chevron-down'} />
+						{this.state.open ? <ChevronUp /> : <ChevronDown />}
 					</span>
 					&nbsp;
 					{this.props.heading}
 				</div>
-				{this.state.open && <div className="panel-body">{this.props.children}</div>}
+				{this.state.open && <div className="card-body">{this.props.children}</div>}
 			</div>
 		);
 	}

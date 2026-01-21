@@ -1,3 +1,4 @@
+import * as bootstrap from 'bootstrap';
 import { Loading } from 'f61ui/component/loading';
 import { focusRetainer, uniqueDomId } from 'f61ui/utils';
 import * as React from 'react';
@@ -23,15 +24,17 @@ export class ModalDialog extends React.Component<ModalDialogProps, {}> {
 	}
 
 	componentDidMount() {
+		const modal = new bootstrap.Modal(this.dialogRef!);
+
 		// modal showing loses the focus if the focus was already inside the modal content,
 		// so we use this hack to retain the focused element
 		focusRetainer(() => {
-			jQuery(this.dialogRef!).modal('show');
+			modal.show();
 		});
 
 		// we need to let parent know of dialog close, so parent can destroy us,
 		// because after dialog has been closed, we are pretty much useless
-		jQuery(this.dialogRef!).on('hidden.bs.modal', () => {
+		this.dialogRef!.addEventListener('hidden.bs.modal', () => {
 			if (this.props.onClose) {
 				this.props.onClose();
 			}
@@ -44,7 +47,7 @@ export class ModalDialog extends React.Component<ModalDialogProps, {}> {
 		// like expected, but the modal layer would be left behind
 		const ref = this.dialogRef;
 		if (ref) {
-			jQuery(ref).modal('hide');
+			new bootstrap.Modal(ref).hide();
 		}
 	}
 
@@ -57,7 +60,7 @@ export class ModalDialog extends React.Component<ModalDialogProps, {}> {
 
 		const dialogContent = (
 			<div
-				className="modal"
+				className="modal fade"
 				style={{ display: 'block' }}
 				ref={(input) => {
 					this.dialogRef = input;
@@ -69,24 +72,23 @@ export class ModalDialog extends React.Component<ModalDialogProps, {}> {
 				<div className="modal-dialog" role="document">
 					<div className="modal-content">
 						<div className="modal-header">
+							<h1 className="modal-title fs-5" id={labelName}>
+								{this.props.title}
+							</h1>
 							<button
 								type="button"
-								className="close"
-								data-dismiss="modal"
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							<h4 className="modal-title" id={labelName}>
-								{this.props.title}
-							</h4>
+								className="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							/>
 						</div>
 						<div className="modal-body">{this.props.children}</div>
 						<div className="modal-footer">
 							{this.props.loading ? <Loading /> : null}
 							<button
 								type="button"
-								className="btn btn-default"
-								data-dismiss="modal"
+								className="btn btn-secondary"
+								data-bs-dismiss="modal"
 								disabled={this.props.loading}>
 								Cancel
 							</button>

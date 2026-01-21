@@ -1,4 +1,4 @@
-import { Glyphicon } from 'f61ui/component/bootstrap';
+import InfoCircleFill from 'bootstrap-icons/icons/info-circle-fill.svg';
 import * as React from 'react';
 
 interface InfoProps {
@@ -7,6 +7,10 @@ interface InfoProps {
 
 export class Info extends React.Component<InfoProps, {}> {
 	render() {
-		return <Glyphicon icon="info-sign" title={this.props.text} />;
+		return (
+			<span title={this.props.text}>
+				<InfoCircleFill />
+			</span>
+		);
 	}
 }

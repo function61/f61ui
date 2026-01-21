@@ -22,7 +22,7 @@ export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {
 		return (
 			<div>
 				<div className="header clearfix">
-					<div className="pull-left">
+					<div className="float-start">
 						<h3 className="app-logo text-muted">
 							<a href={this.props.logoClickUrl}>
 								{this.props.logoNode || this.props.appName}
@@ -31,12 +31,12 @@ export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {
 					</div>
 
 					{this.props.searchWidget ? (
-						<div className="pull-left" style={{ padding: '18px 0 0 20px' }}>
+						<div className="float-start" style={{ padding: '18px 0 0 20px' }}>
 							{this.props.searchWidget}{' '}
 						</div>
 					) : null}
 
-					<nav className="pull-right">
+					<nav className="float-end">
 						<NavigationTabs links={this.props.navLinks} />
 					</nav>
 				</div>
@@ -45,19 +45,22 @@ export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {
 
 				{this.props.content}
 
-				<div
-					className="panel panel-default panel-footer clearfix"
-					style={{ marginTop: '16px' }}>
-					<div className="pull-left">
-						<a href={this.props.appHomepage} target="_blank">
-							{this.props.appName}
-						</a>
-						&nbsp;{this.props.version}&nbsp;by{' '}
-						<a href="https://function61.com/" target="_blank">
-							function61.com
-						</a>
+				<div className="card mt-3" style={{ marginTop: '16px' }}>
+					<div className="card-body text-body-tertiary">
+						<div className="float-start">
+							<a href={this.props.appHomepage} target="_blank" className="text-reset">
+								{this.props.appName}
+							</a>
+							&nbsp;{this.props.version}&nbsp;by{' '}
+							<a
+								href="https://function61.com/"
+								target="_blank"
+								className="text-reset">
+								function61.com
+							</a>
+						</div>
+						<div className="float-end">{this.enjoyYourDayGreeting()}</div>
 					</div>
-					<div className="pull-right">{this.enjoyYourDayGreeting()}</div>
 				</div>
 			</div>
 		);
@@ -77,7 +80,7 @@ export class DefaultLayout extends React.Component<DefaultLayoutProps, {}> {
 
 		return (
 			<span>
-				<a href="https://function61.com/happy" target="_blank">
+				<a href="https://function61.com/happy" target="_blank" className="text-reset">
 					Enjoy
 				</a>{' '}
 				your {dayOfWeek}! :)

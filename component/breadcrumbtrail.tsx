@@ -14,18 +14,24 @@ export class BreadcrumbTrail extends React.Component<BreadcrumbTrailProps, {}> {
 		const items = this.props.items.map((item, index) => {
 			if (!item.url) {
 				return (
-					<li key={index} className="active">
+					<li key={index} className="breadcrumb-item active">
 						{item.title}
 					</li>
 				);
 			}
 			return (
-				<li key={index}>
+				<li key={index} className="breadcrumb-item">
 					<a href={item.url}>{item.title}</a>
 				</li>
 			);
 		});
 
-		return <ol className="breadcrumb">{items}</ol>;
+		return (
+			<nav aria-label="breadcrumb">
+				<ol className="breadcrumb breadcrumb-custom overflow-hidden text-center bg-body-tertiary border rounded-3 mt-3">
+					{items}
+				</ol>
+			</nav>
+		);
 	}
 }

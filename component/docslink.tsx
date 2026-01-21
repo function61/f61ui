@@ -1,4 +1,4 @@
-import { Glyphicon } from 'f61ui/component/bootstrap';
+import QuestionCircleFill from 'bootstrap-icons/icons/question-circle-fill.svg';
 import * as React from 'react';
 
 interface DocsLinkProps {
@@ -13,7 +13,7 @@ export class DocsLink extends React.Component<DocsLinkProps, {}> {
 				href={this.props.url}
 				title={this.props.title || 'View documentation'}
 				target="_blank">
-				<Glyphicon icon="question-sign" />
+				<QuestionCircleFill />
 				{this.props.title ? ' ' + this.props.title : ''}
 			</a>
 		);

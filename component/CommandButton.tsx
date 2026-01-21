@@ -1,5 +1,7 @@
+import Pencil from 'bootstrap-icons/icons/pencil.svg';
+import PlusCircle from 'bootstrap-icons/icons/plus-circle.svg';
+import Trash from 'bootstrap-icons/icons/trash.svg';
 import { CommandDefinition, CrudNature } from 'f61ui/commandtypes';
-import { Glyphicon } from 'f61ui/component/bootstrap';
 import {
 	CommandChangesArgs,
 	CommandPagelet,
@@ -83,11 +85,23 @@ interface CommandIconState {
 function commandCrudNatureToIcon(nature: CrudNature, title: string): React.ReactNode {
 	switch (nature) {
 		case CrudNature.create:
-			return <Glyphicon icon="plus" title={title} />;
+			return (
+				<span title={title}>
+					<PlusCircle />
+				</span>
+			);
 		case CrudNature.update:
-			return <Glyphicon icon="pencil" title={title} />;
+			return (
+				<span title={title}>
+					<Pencil />
+				</span>
+			);
 		case CrudNature.delete:
-			return <Glyphicon icon="remove" title={title} />;
+			return (
+				<span title={title}>
+					<Trash />
+				</span>
+			);
 		default:
 			throw unrecognizedValue(nature);
 	}
